@@ -1,54 +1,42 @@
-package lu.arthurmj.cnfpc_full_stack_project_assignment.entity;
+package lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketStatus;
 
-@Entity
-@Table(name = "tickets")
-public class Ticket {
+public class TicketResponseDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private String description;
-
-    @Enumerated(EnumType.STRING)
-    private TicketStatus status = TicketStatus.OPEN;
-
-    @Enumerated(EnumType.STRING)
-    private TicketPriority priority = TicketPriority.LOW;
-
-    @ManyToOne
-    private User author;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ticket_assignees", joinColumns = @JoinColumn(name = "ticket_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> assignedTo = new HashSet<>();
-
-    @Column(insertable = false, updatable = false, columnDefinition = "timestamp default now()")
+    private TicketStatus status;
+    private TicketPriority priority;
+    private UserResponseDTO author;
+    private Set<UserResponseDTO> assignedTo = new HashSet<>();
     private LocalDateTime createdAt;
-
-    @Column(insertable = false, columnDefinition = "timestamp default now()")
     private LocalDateTime updatedAt;
-
     private LocalDateTime dueAt;
+
+    public TicketResponseDTO(Long id, String title, String description, TicketStatus status, TicketPriority priority,
+            UserResponseDTO author, Set<UserResponseDTO> assignedTo, LocalDateTime createdAt, LocalDateTime updatedAt,
+            LocalDateTime dueAt) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.priority = priority;
+        this.author = author;
+        this.assignedTo = assignedTo;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.dueAt = dueAt;
+    }
+
+    public TicketResponseDTO() {
+    }
 
     public Long getId() {
         return id;
@@ -90,19 +78,19 @@ public class Ticket {
         this.priority = priority;
     }
 
-    public User getAuthor() {
+    public UserResponseDTO getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(UserResponseDTO author) {
         this.author = author;
     }
 
-    public Set<User> getAssignedTo() {
+    public Set<UserResponseDTO> getAssignedTo() {
         return assignedTo;
     }
 
-    public void setAssignedTo(Set<User> assignedTo) {
+    public void setAssignedTo(Set<UserResponseDTO> assignedTo) {
         this.assignedTo = assignedTo;
     }
 
