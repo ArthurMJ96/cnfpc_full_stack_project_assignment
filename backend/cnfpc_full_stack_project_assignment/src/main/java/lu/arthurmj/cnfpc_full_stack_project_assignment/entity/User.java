@@ -50,11 +50,9 @@ public class User {
   private LocalDateTime createdAt;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
-  @JsonIgnore
   private Set<Ticket> tickets = new HashSet<>();
 
   @ManyToMany(fetch = FetchType.LAZY, mappedBy = "assignedTo")
-  @JsonIgnore
   private Set<Ticket> assignedTickets = new HashSet<>();
 
   public Long getId() {

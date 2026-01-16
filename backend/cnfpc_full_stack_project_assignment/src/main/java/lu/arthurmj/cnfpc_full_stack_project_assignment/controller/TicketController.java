@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Ticket;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.TicketResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.service.TicketService;
 
 @RestController
@@ -18,7 +18,7 @@ public class TicketController {
     private TicketService ticketService;
 
     @GetMapping
-    public List<Ticket> getTickets() {
+    public List<TicketResponseDTO> getTickets() {
         return ticketService.getAll();
     }
 }

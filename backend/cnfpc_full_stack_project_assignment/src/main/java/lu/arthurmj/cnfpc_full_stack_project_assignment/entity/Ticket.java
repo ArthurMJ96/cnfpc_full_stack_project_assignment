@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -49,6 +50,9 @@ public class Ticket {
     private LocalDateTime updatedAt;
 
     private LocalDateTime dueAt;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket")
+    private Set<TicketComment> comments = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -128,6 +132,14 @@ public class Ticket {
 
     public void setDueAt(LocalDateTime dueAt) {
         this.dueAt = dueAt;
+    }
+
+    public Set<TicketComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<TicketComment> comments) {
+        this.comments = comments;
     }
 
 }

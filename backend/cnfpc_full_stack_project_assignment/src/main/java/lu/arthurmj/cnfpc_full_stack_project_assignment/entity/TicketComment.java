@@ -28,6 +28,9 @@ public class TicketComment {
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
+    private boolean deleted = false;
+    private boolean edited = false;
+
     public Long getId() {
         return id;
     }
@@ -58,6 +61,22 @@ public class TicketComment {
 
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isEdited() {
+        return edited;
+    }
+
+    public void setEdited(boolean edited) {
+        this.edited = edited;
     }
 
 }
