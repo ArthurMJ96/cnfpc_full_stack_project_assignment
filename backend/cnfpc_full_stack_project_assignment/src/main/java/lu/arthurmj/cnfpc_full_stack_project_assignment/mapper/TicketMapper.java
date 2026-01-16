@@ -25,6 +25,15 @@ public class TicketMapper {
         return dto;
     }
 
+    public static TicketResponseDTO toResponseWithComments(Ticket ticket) {
+        if (ticket == null) {
+            return null;
+        }
+        TicketResponseDTO dto = toResponse(ticket);
+        ticket.getComments().forEach(comment -> dto.getComments().add(TicketCommentMapper.toResponse(comment)));
+        return dto;
+    }
+
     public static Ticket toEntity(TicketResponseDTO dto) {
         if (dto == null) {
             return null;
@@ -43,12 +52,21 @@ public class TicketMapper {
         return ticket;
     }
 
-    public List<TicketResponseDTO> toResponseList(List<Ticket> tickets) {
+    public static List<TicketResponseDTO> toResponseList(List<Ticket> tickets) {
         if (tickets == null) {
             return null;
         }
         return tickets.stream()
                 .map(TicketMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    public static List<TicketResponseDTO> toResponseListWithComments(List<Ticket> tickets) {
+        if (tickets == null) {
+            return null;
+        }
+        return tickets.stream()
+                .map(TicketMapper::toResponseWithComments)
                 .collect(Collectors.toList());
     }
 }

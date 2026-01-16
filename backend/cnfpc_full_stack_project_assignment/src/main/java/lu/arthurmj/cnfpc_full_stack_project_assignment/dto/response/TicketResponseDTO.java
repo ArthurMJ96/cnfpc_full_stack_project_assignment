@@ -19,10 +19,11 @@ public class TicketResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime dueAt;
+    private Set<TicketCommentResponseDTO> comments = new HashSet<>();
 
     public TicketResponseDTO(Long id, String title, String description, TicketStatus status, TicketPriority priority,
             UserResponseDTO author, Set<UserResponseDTO> assignedTo, LocalDateTime createdAt, LocalDateTime updatedAt,
-            LocalDateTime dueAt) {
+            LocalDateTime dueAt, Set<TicketCommentResponseDTO> comments) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -33,6 +34,7 @@ public class TicketResponseDTO {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.dueAt = dueAt;
+        this.comments = comments;
     }
 
     public TicketResponseDTO() {
@@ -116,6 +118,14 @@ public class TicketResponseDTO {
 
     public void setDueAt(LocalDateTime dueAt) {
         this.dueAt = dueAt;
+    }
+
+    public Set<TicketCommentResponseDTO> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<TicketCommentResponseDTO> comments) {
+        this.comments = comments;
     }
 
 }
