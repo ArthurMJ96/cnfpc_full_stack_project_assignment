@@ -1,5 +1,7 @@
 package lu.arthurmj.cnfpc_full_stack_project_assignment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.HashSet;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -12,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
@@ -39,8 +42,32 @@ public class User {
   @Column(name = "created_at", insertable = false, updatable = false, columnDefinition = "timestamp default now()")
   private LocalDateTime createdAt;
 
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
+  @JsonIgnore
+  private Set<Ticket> tickets = new HashSet<>();
+
+  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "assignedTo")
+  @JsonIgnore
+  private Set<Ticket> assignedTickets = new HashSet<>();
+
   public Long getId() {
     return id;
+  }
+
+  public Set<Ticket> getTickets() {
+    return tickets;
+  }
+
+  public void setTickets(Set<Ticket> tickets) {
+    this.tickets = tickets;
+  }
+
+  public Set<Ticket> getAssignedTickets() {
+    return assignedTickets;
+  }
+
+  public void setAssignedTickets(Set<Ticket> assignedTickets) {
+    this.assignedTickets = assignedTickets;
   }
 
   public void setId(Long id) {
