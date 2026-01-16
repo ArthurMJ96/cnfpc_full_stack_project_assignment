@@ -6,13 +6,16 @@ import java.util.HashSet;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Column;
@@ -35,8 +38,10 @@ public class User {
   private String lastname;
   private String jobTitle;
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+  @ElementCollection(fetch = FetchType.LAZY)
+  @CollectionTable(name = "user_role_names", joinColumns = @JoinColumn(name = "user_id"))
+  @Column(name = "role_name", nullable = false)
+  @Enumerated(EnumType.STRING)
   private Set<Role> roles = new HashSet<>();
 
   @Column(name = "created_at", insertable = false, updatable = false, columnDefinition = "timestamp default now()")
