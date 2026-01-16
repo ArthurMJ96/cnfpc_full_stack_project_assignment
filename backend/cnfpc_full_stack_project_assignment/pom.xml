@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<typescript-generator.version>3.2.1263</typescript-generator.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -85,6 +86,32 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>cz.habarta.typescript-generator</groupId>
+				<artifactId>typescript-generator-maven-plugin</artifactId>
+				<version>${typescript-generator.version}</version>
+				<executions>
+					<execution>
+						<id>generate-shared-enums</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>process-classes</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<jsonLibrary>jackson2</jsonLibrary>
+					<mapEnum>asEnum</mapEnum>
+					<classes>
+						<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority</class>
+						<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketStatus</class>
+						<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role</class>
+					</classes>
+					<outputKind>module</outputKind>
+					<outputFileType>implementationFile</outputFileType>
+					<outputFile>${project.basedir}/../../shared/enums/index.ts</outputFile>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
