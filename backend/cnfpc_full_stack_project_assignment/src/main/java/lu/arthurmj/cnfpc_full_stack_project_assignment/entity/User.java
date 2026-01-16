@@ -30,7 +30,9 @@ public class User {
   private Long id;
 
   // Basic user info
+  @Column(unique = true, nullable = false)
   private String email;
+  @Column(nullable = false)
   private String password;
 
   // Basic profile info
@@ -39,7 +41,7 @@ public class User {
   private String jobTitle;
 
   @ElementCollection(fetch = FetchType.LAZY)
-  @CollectionTable(name = "user_role_names", joinColumns = @JoinColumn(name = "user_id"))
+  @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
   @Column(name = "role_name", nullable = false)
   @Enumerated(EnumType.STRING)
   private Set<Role> roles = new HashSet<>();
@@ -57,22 +59,6 @@ public class User {
 
   public Long getId() {
     return id;
-  }
-
-  public Set<Ticket> getTickets() {
-    return tickets;
-  }
-
-  public void setTickets(Set<Ticket> tickets) {
-    this.tickets = tickets;
-  }
-
-  public Set<Ticket> getAssignedTickets() {
-    return assignedTickets;
-  }
-
-  public void setAssignedTickets(Set<Ticket> assignedTickets) {
-    this.assignedTickets = assignedTickets;
   }
 
   public void setId(Long id) {
@@ -93,30 +79,6 @@ public class User {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public Set<Role> getRoles() {
-    return roles;
-  }
-
-  public void setRoles(Set<Role> roles) {
-    this.roles = roles;
-  }
-
-  public void addRole(Role role) {
-    this.roles.add(role);
-  }
-
-  public void removeRole(Role role) {
-    this.roles.remove(role);
-  }
-
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
   }
 
   public String getFirstname() {
@@ -142,4 +104,37 @@ public class User {
   public void setJobTitle(String jobTitle) {
     this.jobTitle = jobTitle;
   }
+
+  public Set<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(Set<Role> roles) {
+    this.roles = roles;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Set<Ticket> getTickets() {
+    return tickets;
+  }
+
+  public void setTickets(Set<Ticket> tickets) {
+    this.tickets = tickets;
+  }
+
+  public Set<Ticket> getAssignedTickets() {
+    return assignedTickets;
+  }
+
+  public void setAssignedTickets(Set<Ticket> assignedTickets) {
+    this.assignedTickets = assignedTickets;
+  }
+
 }
