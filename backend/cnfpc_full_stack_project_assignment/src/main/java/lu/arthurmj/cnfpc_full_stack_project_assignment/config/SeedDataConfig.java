@@ -41,7 +41,7 @@ public class SeedDataConfig {
       }
       // Add admin
       User admin = addUser("admin@admin.com", "admin@admin.com", "Badmin", "Sleeper", "IT Specialist",
-          Set.of(Role.ADMIN, Role.SUPPORT, Role.EMPLOYEE));
+          Set.of(Role.ADMIN, Role.SUPPORT, Role.AUTHOR));
 
       // Users that handle tickets
       User sUser1 = addSupportUser("engi1@engi1.com", "engi1@engi1.com", "John", "Code", "10x Developer");
@@ -50,7 +50,7 @@ public class SeedDataConfig {
       User sUser4 = addSupportUser("engi4@engi4.com", "engi4@engi4.com", "Jack", "Smith", "Noob Developer (Nepo hire)");
 
       // CTO user with support and employee roles
-      User cto = addUser("cto@cto.com", "cto@cto.com", "James", "Jones", "CTO", Set.of(Role.SUPPORT, Role.EMPLOYEE));
+      User cto = addUser("cto@cto.com", "cto@cto.com", "James", "Jones", "CTO", Set.of(Role.SUPPORT, Role.AUTHOR));
 
       // Regular employee users that make tickets
       User ceo = addEmployeeUser("ceo@ceo.com", "ceo@ceo.com", "Jim", "Smith", "CEO");
@@ -125,7 +125,7 @@ public class SeedDataConfig {
       String firstname,
       String lastname,
       String jobTitle) {
-    return addUser(email, password, firstname, lastname, jobTitle, Set.of(Role.EMPLOYEE));
+    return addUser(email, password, firstname, lastname, jobTitle, Set.of(Role.AUTHOR));
   }
   // #endregion
 

@@ -3,6 +3,7 @@ package lu.arthurmj.cnfpc_full_stack_project_assignment.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.CreateTicketRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.TicketResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Ticket;
 
@@ -35,23 +36,17 @@ public class TicketMapper {
         return dto;
     }
 
-    // public static Ticket toEntity(TicketResponseDTO dto) {
-    //     if (dto == null) {
-    //         return null;
-    //     }
-    //     Ticket ticket = new Ticket();
-    //     ticket.setId(dto.getId());
-    //     ticket.setTitle(dto.getTitle());
-    //     ticket.setDescription(dto.getDescription());
-    //     ticket.setStatus(dto.getStatus());
-    //     ticket.setPriority(dto.getPriority());
-    //     ticket.setAuthor(UserMapper.toEntity(dto.getAuthor()));
-    //     ticket.setCreatedAt(dto.getCreatedAt());
-    //     ticket.setUpdatedAt(dto.getUpdatedAt());
-    //     ticket.setDueAt(dto.getDueAt());
-    //     dto.getAssignedTo().forEach(userDto -> ticket.getAssignedTo().add(UserMapper.toEntity(userDto)));
-    //     return ticket;
-    // }
+    public static Ticket toEntity(CreateTicketRequestDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        Ticket ticket = new Ticket();
+        ticket.setTitle(dto.getTitle());
+        ticket.setDescription(dto.getDescription());
+        ticket.setPriority(dto.getPriority());
+        ticket.setDueAt(dto.getDueAt());
+        return ticket;
+    }
 
     public static List<TicketResponseDTO> toResponseList(List<Ticket> tickets) {
         if (tickets == null) {

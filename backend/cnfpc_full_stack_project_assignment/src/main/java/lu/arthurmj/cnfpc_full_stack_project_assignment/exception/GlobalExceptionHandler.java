@@ -59,6 +59,16 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
   }
 
+  // Handle authorization failures (Role) → 403 Forbidden
+  @ExceptionHandler(ForbiddenException.class)
+  public ResponseEntity<ErrorResponseDTO> handleForbidden(
+      ForbiddenException ex) {
+    ErrorResponseDTO response = new ErrorResponseDTO(
+        HttpStatus.FORBIDDEN.value(), // 403
+        ex.getMessage());
+    return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+  }
+
   // Handle ResourceNotFoundException → 404 Not Found
   @ExceptionHandler(ResourceNotFoundException.class)
   public ResponseEntity<ErrorResponseDTO> handleResourceNotFound(

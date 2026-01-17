@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,10 +47,11 @@ public class Ticket {
     @JoinTable(name = "ticket_assignees", joinColumns = @JoinColumn(name = "ticket_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> assignedTo = new HashSet<>();
 
-    @Column(insertable = false, updatable = false, columnDefinition = "timestamp default now()")
+    @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(insertable = false, columnDefinition = "timestamp default now()")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     private LocalDateTime dueAt;
