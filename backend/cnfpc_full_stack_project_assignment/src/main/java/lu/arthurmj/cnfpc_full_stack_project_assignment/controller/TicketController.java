@@ -8,12 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.CreateTicketRequestDTO;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.UpdateTicketRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.TicketResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.service.TicketService;
 
@@ -36,6 +38,11 @@ public class TicketController {
 
     @PostMapping
     public ResponseEntity<TicketResponseDTO> createTicket(@Valid @RequestBody CreateTicketRequestDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.save(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.create(dto));
+    }
+
+    @PutMapping
+    public ResponseEntity<TicketResponseDTO> updateTicket(@Valid @RequestBody UpdateTicketRequestDTO dto) {
+        return ResponseEntity.ok(ticketService.update(dto));
     }
 }

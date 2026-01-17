@@ -2,10 +2,12 @@ package lu.arthurmj.cnfpc_full_stack_project_assignment.service;
 
 import java.util.List;
 
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.CreateTicketRequestDTO;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.UpdateTicketRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.TicketResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Ticket;
@@ -31,7 +33,7 @@ public class TicketService {
         return TicketMapper.toResponseListWithComments(ticketRepository.findAll());
     }
 
-    public TicketResponseDTO save(CreateTicketRequestDTO dto) {
+    public TicketResponseDTO create(CreateTicketRequestDTO dto) {
         long authorId = dto.getAuthorId();
         User author = userRepository.findById(authorId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", authorId));
@@ -51,5 +53,21 @@ public class TicketService {
     public TicketResponseDTO getById(Long id) {
         return TicketMapper.toResponseWithComments(ticketRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket", id)));
+    }
+
+    public TicketResponseDTO update(UpdateTicketRequestDTO dto) {
+        Long ticketId = dto.getId();
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket", ticketId));
+
+        ticket.setTitle(dto.getTitle());
+        ticket.setDescription(dto.getDescription());
+        ticket.setPriority(dto.getPriority());
+        if (dto.getDueAt() != null) {
+            ticket.setDueAt(dto.getDueAt());
+        }
+        ticket.setStatus(dto.getStatus());
+
+        return TicketMapper.toResponse(ticketRepository.save(ticket));
     }
 }

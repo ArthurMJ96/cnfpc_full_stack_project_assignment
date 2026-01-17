@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-01-16 16:57:05.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-17 14:12:37.
 
 export const enum TicketPriority {
     LOW = "LOW",
@@ -19,5 +19,5 @@ export const enum TicketStatus {
 export const enum Role {
     ADMIN = "ADMIN",
     SUPPORT = "SUPPORT",
-    EMPLOYEE = "EMPLOYEE",
+    AUTHOR = "AUTHOR",
 }
