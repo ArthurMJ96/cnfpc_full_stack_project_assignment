@@ -1,0 +1,16 @@
+meta {
+  name: /users/support
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/api/users/support
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

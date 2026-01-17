@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.UserResponseDTO;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.exception.ResourceNotFoundException;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.mapper.UserMapper;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.UserRepository;
@@ -22,5 +23,9 @@ public class UserService {
     public UserResponseDTO getById(Long id) {
         return UserMapper
                 .toResponse(userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", id)));
+    }
+
+    public List<UserResponseDTO> getSupport() {
+        return UserMapper.toResponseList(userRepository.findByRoles(Role.SUPPORT));
     }
 }
