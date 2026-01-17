@@ -1,13 +1,17 @@
 meta {
-  name: /tickets/
+  name: GET /tickets/{id}
   type: http
   seq: 2
 }
 
 get {
-  url: {{base_url}}/api/tickets
+  url: {{base_url}}/api/tickets/:id
   body: none
   auth: inherit
+}
+
+params:path {
+  id: 1
 }
 
 settings {

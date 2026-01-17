@@ -1,0 +1,25 @@
+meta {
+  name: POST /tickets
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/api/tickets
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Network drive access",
+    "description": "I am unable to access the shared network drive. It shows a permission error.",
+    "priority": "LOW",
+    "authorId": 1
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
