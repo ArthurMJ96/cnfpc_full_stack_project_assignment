@@ -1,7 +1,5 @@
 package lu.arthurmj.cnfpc_full_stack_project_assignment.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.HashSet;
 import java.time.LocalDateTime;
 import java.util.Set;

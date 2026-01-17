@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.UserResponseDTO;
-import lu.arthurmj.cnfpc_full_stack_project_assignment.mapper.UserMapper;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.service.UserService;
 
 @RestController
@@ -21,6 +20,6 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getUsers() {
-        return ResponseEntity.ok(UserMapper.toResponseList(userService.getAll()));
+        return ResponseEntity.ok(userService.getAll());
     }
 }

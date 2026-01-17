@@ -3,7 +3,9 @@ package lu.arthurmj.cnfpc_full_stack_project_assignment.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +20,12 @@ public class TicketController {
     private TicketService ticketService;
 
     @GetMapping
-    public List<TicketResponseDTO> getTickets() {
-        return ticketService.getAll();
+    public ResponseEntity<List<TicketResponseDTO>> getTickets() {
+        return ResponseEntity.ok(ticketService.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TicketResponseDTO> getTicketById(@PathVariable Long id) {
+        return ResponseEntity.ok(ticketService.getById(id));
     }
 }

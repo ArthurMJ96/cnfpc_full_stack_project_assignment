@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.User;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.UserResponseDTO;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.mapper.UserMapper;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.UserRepository;
 
 @Service
@@ -13,7 +14,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserResponseDTO> getAll() {
+        return UserMapper.toResponseList(userRepository.findAll());
     }
 }
