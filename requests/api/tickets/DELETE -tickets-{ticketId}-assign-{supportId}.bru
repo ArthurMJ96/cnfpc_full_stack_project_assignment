@@ -1,0 +1,21 @@
+meta {
+  name: DELETE /tickets/{ticketId}/assign/{supportId}
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{base_url}}/api/tickets/:ticketId/assign/:supportId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  ticketId: 4
+  supportId: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

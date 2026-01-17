@@ -1,0 +1,20 @@
+meta {
+  name: DELETE /comment/{id}
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{base_url}}/api/tickets/comment/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 12
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
