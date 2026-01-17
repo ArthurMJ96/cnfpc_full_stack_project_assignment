@@ -21,6 +21,7 @@ public class TicketMapper {
         dto.setCreatedAt(ticket.getCreatedAt());
         dto.setUpdatedAt(ticket.getUpdatedAt());
         dto.setDueAt(ticket.getDueAt());
+        dto.setCommentCount(ticket.getCommentCount());
         ticket.getAssignedTo().forEach(user -> dto.getAssignedTo().add(UserMapper.toResponse(user)));
         return dto;
     }
@@ -34,23 +35,23 @@ public class TicketMapper {
         return dto;
     }
 
-    public static Ticket toEntity(TicketResponseDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        Ticket ticket = new Ticket();
-        ticket.setId(dto.getId());
-        ticket.setTitle(dto.getTitle());
-        ticket.setDescription(dto.getDescription());
-        ticket.setStatus(dto.getStatus());
-        ticket.setPriority(dto.getPriority());
-        ticket.setAuthor(UserMapper.toEntity(dto.getAuthor()));
-        ticket.setCreatedAt(dto.getCreatedAt());
-        ticket.setUpdatedAt(dto.getUpdatedAt());
-        ticket.setDueAt(dto.getDueAt());
-        dto.getAssignedTo().forEach(userDto -> ticket.getAssignedTo().add(UserMapper.toEntity(userDto)));
-        return ticket;
-    }
+    // public static Ticket toEntity(TicketResponseDTO dto) {
+    //     if (dto == null) {
+    //         return null;
+    //     }
+    //     Ticket ticket = new Ticket();
+    //     ticket.setId(dto.getId());
+    //     ticket.setTitle(dto.getTitle());
+    //     ticket.setDescription(dto.getDescription());
+    //     ticket.setStatus(dto.getStatus());
+    //     ticket.setPriority(dto.getPriority());
+    //     ticket.setAuthor(UserMapper.toEntity(dto.getAuthor()));
+    //     ticket.setCreatedAt(dto.getCreatedAt());
+    //     ticket.setUpdatedAt(dto.getUpdatedAt());
+    //     ticket.setDueAt(dto.getDueAt());
+    //     dto.getAssignedTo().forEach(userDto -> ticket.getAssignedTo().add(UserMapper.toEntity(userDto)));
+    //     return ticket;
+    // }
 
     public static List<TicketResponseDTO> toResponseList(List<Ticket> tickets) {
         if (tickets == null) {

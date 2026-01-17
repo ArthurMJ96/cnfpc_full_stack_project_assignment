@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.Formula;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -53,6 +55,9 @@ public class Ticket {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket")
     private Set<TicketComment> comments = new HashSet<>();
+
+    @Formula("(SELECT COUNT(c.id) FROM ticket_comments c WHERE c.ticket_id = id AND c.deleted = false)")
+    private int commentCount;
 
     public Long getId() {
         return id;
@@ -140,6 +145,14 @@ public class Ticket {
 
     public void setComments(Set<TicketComment> comments) {
         this.comments = comments;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 
 }

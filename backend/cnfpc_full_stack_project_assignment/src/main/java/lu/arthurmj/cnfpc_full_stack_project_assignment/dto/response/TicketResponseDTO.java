@@ -19,6 +19,7 @@ public class TicketResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime dueAt;
+    private int commentCount;
     private Set<TicketCommentResponseDTO> comments = new HashSet<>();
 
     public TicketResponseDTO(Long id, String title, String description, TicketStatus status, TicketPriority priority,
@@ -118,6 +119,14 @@ public class TicketResponseDTO {
 
     public void setDueAt(LocalDateTime dueAt) {
         this.dueAt = dueAt;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 
     public Set<TicketCommentResponseDTO> getComments() {
