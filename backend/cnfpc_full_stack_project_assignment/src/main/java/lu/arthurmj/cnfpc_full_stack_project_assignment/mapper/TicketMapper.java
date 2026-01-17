@@ -3,7 +3,7 @@ package lu.arthurmj.cnfpc_full_stack_project_assignment.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.CreateTicketRequestDTO;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.ticket.CreateTicketRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.TicketResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Ticket;
 
@@ -27,12 +27,14 @@ public class TicketMapper {
         return dto;
     }
 
-    public static TicketResponseDTO toResponseWithComments(Ticket ticket) {
+    public static TicketResponseDTO toResponseWithComments(Ticket ticket, boolean includeDeleted) {
         if (ticket == null) {
             return null;
         }
         TicketResponseDTO dto = toResponse(ticket);
-        ticket.getComments().forEach(comment -> dto.getComments().add(TicketCommentMapper.toResponse(comment)));
+        ticket.getComments().stream()
+                .filter(comment -> includeDeleted || !comment.isDeleted())
+                .forEach(comment -> dto.getComments().add(TicketCommentMapper.toResponse(comment)));
         return dto;
     }
 
@@ -57,12 +59,12 @@ public class TicketMapper {
                 .collect(Collectors.toList());
     }
 
-    public static List<TicketResponseDTO> toResponseListWithComments(List<Ticket> tickets) {
+    public static List<TicketResponseDTO> toResponseListWithComments(List<Ticket> tickets, boolean includeDeleted) {
         if (tickets == null) {
             return null;
         }
         return tickets.stream()
-                .map(TicketMapper::toResponseWithComments)
+                .map(ticket -> toResponseWithComments(ticket, includeDeleted))
                 .collect(Collectors.toList());
     }
 }

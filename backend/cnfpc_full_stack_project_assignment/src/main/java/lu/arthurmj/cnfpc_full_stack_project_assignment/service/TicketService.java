@@ -2,12 +2,11 @@ package lu.arthurmj.cnfpc_full_stack_project_assignment.service;
 
 import java.util.List;
 
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.CreateTicketRequestDTO;
-import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.UpdateTicketRequestDTO;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.ticket.CreateTicketRequestDTO;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.ticket.UpdateTicketRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.TicketResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Ticket;
@@ -29,12 +28,16 @@ public class TicketService {
     private UserRepository userRepository;
 
     public List<TicketResponseDTO> getAll() {
-        // return TicketMapper.toResponseList(ticketRepository.findAll());
-        return TicketMapper.toResponseListWithComments(ticketRepository.findAll());
+        return TicketMapper.toResponseList(ticketRepository.findAll());
+    }
+
+    public TicketResponseDTO getById(Long id) {
+        return TicketMapper.toResponseWithComments(ticketRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket", id)), false);
     }
 
     public TicketResponseDTO create(CreateTicketRequestDTO dto) {
-        long authorId = dto.getAuthorId();
+        Long authorId = dto.getAuthorId();
         User author = userRepository.findById(authorId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", authorId));
 
@@ -48,11 +51,6 @@ public class TicketService {
         ticket.setStatus(TicketStatus.OPEN);
 
         return TicketMapper.toResponse(ticketRepository.save(ticket));
-    }
-
-    public TicketResponseDTO getById(Long id) {
-        return TicketMapper.toResponseWithComments(ticketRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Ticket", id)));
     }
 
     public TicketResponseDTO update(UpdateTicketRequestDTO dto) {

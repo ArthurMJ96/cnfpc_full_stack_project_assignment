@@ -32,7 +32,7 @@ public class Ticket {
     private Long id;
 
     private String title;
-    
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
@@ -58,11 +58,11 @@ public class Ticket {
 
     private LocalDateTime dueAt;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket")
-    private Set<TicketComment> comments = new HashSet<>();
-
     @Formula("(SELECT COUNT(c.id) FROM ticket_comments c WHERE c.ticket_id = id AND c.deleted = false)")
     private int commentCount;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket")
+    private Set<TicketComment> comments = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -144,20 +144,16 @@ public class Ticket {
         this.dueAt = dueAt;
     }
 
+    public int getCommentCount() {
+        return commentCount;
+    }
+
     public Set<TicketComment> getComments() {
         return comments;
     }
 
     public void setComments(Set<TicketComment> comments) {
         this.comments = comments;
-    }
-
-    public int getCommentCount() {
-        return commentCount;
-    }
-
-    public void setCommentCount(int commentCount) {
-        this.commentCount = commentCount;
     }
 
 }

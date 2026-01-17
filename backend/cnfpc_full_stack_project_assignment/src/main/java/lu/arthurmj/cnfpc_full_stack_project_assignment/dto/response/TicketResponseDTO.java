@@ -22,19 +22,21 @@ public class TicketResponseDTO {
     private int commentCount;
     private Set<TicketCommentResponseDTO> comments = new HashSet<>();
 
-    public TicketResponseDTO(Long id, String title, String description, TicketStatus status, TicketPriority priority,
-            UserResponseDTO author, Set<UserResponseDTO> assignedTo, LocalDateTime createdAt, LocalDateTime updatedAt,
-            LocalDateTime dueAt, Set<TicketCommentResponseDTO> comments) {
+    public TicketResponseDTO(Long id, String title, String description, TicketStatus status,
+            TicketPriority priority, LocalDateTime createdAt, LocalDateTime updatedAt,
+            LocalDateTime dueAt, UserResponseDTO author, Set<UserResponseDTO> assignedTo,
+            int commentCount, Set<TicketCommentResponseDTO> comments) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
         this.priority = priority;
-        this.author = author;
-        this.assignedTo = assignedTo;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.dueAt = dueAt;
+        this.author = author;
+        this.assignedTo = assignedTo;
+        this.commentCount = commentCount;
         this.comments = comments;
     }
 

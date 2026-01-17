@@ -1,4 +1,4 @@
-package lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request;
+package lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.ticket;
 
 import java.time.LocalDateTime;
 
@@ -23,9 +23,6 @@ public class BaseTicketRequestDTO {
 
   @Future(message = "Due date must be in the future")
   private LocalDateTime dueAt;
-
-  public BaseTicketRequestDTO() {
-  }
 
   public String getTitle() {
     return title;

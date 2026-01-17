@@ -1,17 +1,17 @@
 meta {
-  name: GET /tickets/{id}
+  name: DELETE /comment/{id}
   type: http
-  seq: 2
+  seq: 3
 }
 
-get {
-  url: {{base_url}}/api/tickets/:id
+delete {
+  url: {{base_url}}/api/tickets/comment/:id
   body: none
   auth: inherit
 }
 
 params:path {
-  id: 7
+  id: 12
 }
 
 settings {
