@@ -68,4 +68,31 @@ public class TicketService {
 
         return TicketMapper.toResponse(ticketRepository.save(ticket));
     }
+
+    public TicketResponseDTO assignTicketToSupport(Long ticketId, Long supportId) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket", ticketId));
+
+        User support = userRepository.findById(supportId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", supportId));
+
+        // Verify support role
+        if (!support.getRoles().contains(Role.SUPPORT)) {
+            throw new ForbiddenException(supportId, "be assigned to tickets");
+        }
+
+        ticket.getAssignedTo().add(support);
+        return TicketMapper.toResponse(ticketRepository.save(ticket));
+    }
+
+    public TicketResponseDTO unassignTicketFromSupport(Long ticketId, Long supportId) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket", ticketId));
+
+        User support = userRepository.findById(supportId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", supportId));
+
+        ticket.getAssignedTo().remove(support);
+        return TicketMapper.toResponse(ticketRepository.save(ticket));
+    }
 }

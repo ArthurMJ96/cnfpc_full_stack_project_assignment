@@ -75,4 +75,20 @@ public class TicketController {
         return ResponseEntity.noContent().build();
     }
     // #endregion
+
+    // #region Ticket Assignment Endpoints
+    @PostMapping("/{ticketId}/assign/{supportId}")
+    public ResponseEntity<TicketResponseDTO> assignTicketToSupport(
+            @PathVariable Long ticketId,
+            @PathVariable Long supportId) {
+        return ResponseEntity.ok(ticketService.assignTicketToSupport(ticketId, supportId));
+    }
+
+    @DeleteMapping("/{ticketId}/assign/{supportId}")
+    public ResponseEntity<TicketResponseDTO> unassignTicketFromSupport(
+            @PathVariable Long ticketId,
+            @PathVariable Long supportId) {
+        return ResponseEntity.ok(ticketService.unassignTicketFromSupport(ticketId, supportId));
+    }
+    // #endregion
 }
