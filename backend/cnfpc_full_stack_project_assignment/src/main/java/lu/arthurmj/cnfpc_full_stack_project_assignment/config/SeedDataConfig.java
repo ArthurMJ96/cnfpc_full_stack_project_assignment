@@ -59,6 +59,7 @@ public class SeedDataConfig {
       User accountant = addEmployeeUser("accountant@accountant.com", "accountant@accountant.com", "Jessica", "Jones",
           "Accountant");
       User cfo = addEmployeeUser("cfo@cfo.com", "cfo@cfo.com", "Catherine", "Tax Evans", "CFO");
+      User hr = addEmployeeUser("hr@hr.com", "hr@hr.com", "Hannah", "Reed", "HR Recruiter");
 
       // Add tickets
       Ticket t1 = addTicketFromUser(ceo, "Cannot access VPN", "I am unable to connect to the company VPN from home.",
@@ -66,8 +67,8 @@ public class SeedDataConfig {
           Set.of(sUser1, sUser2));
       Ticket t2 = addTicketFromUser(accountant, "Software installation request",
           "Requesting installation of accounting software on my workstation.", TicketPriority.MEDIUM, Set.of(sUser3));
-      Ticket t3 = addTicketFromUser(cfo, "Email not syncing", "My work email is not syncing on my mobile device.",
-          TicketPriority.MEDIUM, Set.of(sUser4));
+      Ticket t3 = addTicketFromUser(hr, "Email not syncing", "My work email is not syncing on my mobile device.",
+          TicketPriority.LOW, Set.of(sUser4));
       Ticket t4 = addTicketFromUser(ceo, "Computer won't turn on",
           "My computer is not powering up when I press the power button.", TicketPriority.HIGH,
           Set.of(sUser1));

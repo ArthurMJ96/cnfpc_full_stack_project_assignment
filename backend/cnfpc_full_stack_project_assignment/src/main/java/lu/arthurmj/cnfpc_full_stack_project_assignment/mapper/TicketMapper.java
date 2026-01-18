@@ -18,6 +18,7 @@ public class TicketMapper {
         dto.setDescription(ticket.getDescription());
         dto.setStatus(ticket.getStatus());
         dto.setPriority(ticket.getPriority());
+        dto.setSentiment(ticket.getSentiment());
         dto.setAuthor(UserMapper.toResponse(ticket.getAuthor()));
         dto.setCreatedAt(ticket.getCreatedAt());
         dto.setUpdatedAt(ticket.getUpdatedAt());
@@ -46,6 +47,7 @@ public class TicketMapper {
         ticket.setTitle(dto.getTitle());
         ticket.setDescription(dto.getDescription());
         ticket.setDueAt(dto.getDueAt());
+        // author, status, priority are set in the service layer
         return ticket;
     }
 

@@ -42,6 +42,8 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     private TicketPriority priority = TicketPriority.LOW;
 
+    private String sentiment;
+
     @ManyToOne
     private User author;
 
@@ -102,6 +104,14 @@ public class Ticket {
 
     public void setPriority(TicketPriority priority) {
         this.priority = priority;
+    }
+
+    public String getSentiment() {
+        return sentiment;
+    }
+
+    public void setSentiment(String sentiment) {
+        this.sentiment = sentiment;
     }
 
     public User getAuthor() {
