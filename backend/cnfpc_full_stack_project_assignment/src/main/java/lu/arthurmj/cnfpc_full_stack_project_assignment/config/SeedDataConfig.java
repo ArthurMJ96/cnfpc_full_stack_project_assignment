@@ -8,6 +8,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Ticket;
@@ -28,8 +29,8 @@ public class SeedDataConfig {
 
   @Autowired
   private TicketCommentRepository ticketCommentRepository;
-  // @Autowired
-  // private PasswordEncoder passwordEncoder;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   @Bean
   @ConditionalOnProperty(name = "app.seed-data.sample", havingValue = "true")
@@ -50,7 +51,7 @@ public class SeedDataConfig {
       User sUser4 = addSupportUser("engi4@engi4.com", "engi4@engi4.com", "Jack", "Smith", "Noob Developer (Nepo hire)");
 
       // CTO user with support and employee roles
-      User cto = addUser("cto@cto.com", "cto@cto.com", "James", "Jones", "CTO", Set.of(Role.SUPPORT, Role.AUTHOR));
+      addUser("cto@cto.com", "cto@cto.com", "James", "Jones", "CTO", Set.of(Role.SUPPORT, Role.AUTHOR));
 
       // Regular employee users that make tickets
       User ceo = addEmployeeUser("ceo@ceo.com", "ceo@ceo.com", "Jim", "Smith", "CEO");
@@ -101,7 +102,7 @@ public class SeedDataConfig {
 
     User user = new User();
     user.setEmail(email);
-    user.setPassword(password);
+    user.setPassword(passwordEncoder.encode(password));
     user.setFirstname(firstname);
     user.setLastname(lastname);
     user.setJobTitle(jobTitle);
