@@ -28,6 +28,9 @@ public class TicketService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private GeminiService geminiService;
+
     public List<TicketResponseDTO> getAll() {
         return TicketMapper.toResponseList(ticketRepository.findAll());
     }
@@ -67,7 +70,14 @@ public class TicketService {
         Ticket ticket = TicketMapper.toEntity(dto);
         ticket.setAuthor(author);
         ticket.setStatus(TicketStatus.OPEN);
-
+        try {
+            // Call Gemini service to analyze sentiment and get a priority suggestion
+            GeminiService.SentimentResponse sentimentResponse = geminiService.getTicketSentiment(ticket);
+            ticket.setSentiment(sentimentResponse.getSentiment());
+            ticket.setPriority(sentimentResponse.getDetectedPriority());
+        } catch (Exception e) {
+            System.err.println("Error calling Gemini service: " + e.getMessage());
+        }
         return TicketMapper.toResponse(ticketRepository.save(ticket));
     }
 

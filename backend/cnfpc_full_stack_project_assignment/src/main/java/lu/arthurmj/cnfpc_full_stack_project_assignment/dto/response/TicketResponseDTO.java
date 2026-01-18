@@ -14,6 +14,7 @@ public class TicketResponseDTO {
     private String description;
     private TicketStatus status;
     private TicketPriority priority;
+    private String sentiment;
     private UserResponseDTO author;
     private Set<UserResponseDTO> assignedTo = new HashSet<>();
     private LocalDateTime createdAt;
@@ -23,7 +24,7 @@ public class TicketResponseDTO {
     private Set<TicketCommentResponseDTO> comments = new HashSet<>();
 
     public TicketResponseDTO(Long id, String title, String description, TicketStatus status,
-            TicketPriority priority, LocalDateTime createdAt, LocalDateTime updatedAt,
+            TicketPriority priority, String sentiment, LocalDateTime createdAt, LocalDateTime updatedAt,
             LocalDateTime dueAt, UserResponseDTO author, Set<UserResponseDTO> assignedTo,
             int commentCount, Set<TicketCommentResponseDTO> comments) {
         this.id = id;
@@ -31,6 +32,7 @@ public class TicketResponseDTO {
         this.description = description;
         this.status = status;
         this.priority = priority;
+        this.sentiment = sentiment;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.dueAt = dueAt;
@@ -81,6 +83,14 @@ public class TicketResponseDTO {
 
     public void setPriority(TicketPriority priority) {
         this.priority = priority;
+    }
+
+    public String getSentiment() {
+        return sentiment;
+    }
+
+    public void setSentiment(String sentiment) {
+        this.sentiment = sentiment;
     }
 
     public UserResponseDTO getAuthor() {

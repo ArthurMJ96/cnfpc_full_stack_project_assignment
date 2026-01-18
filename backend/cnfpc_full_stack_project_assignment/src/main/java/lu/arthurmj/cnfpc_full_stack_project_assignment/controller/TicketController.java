@@ -1,7 +1,6 @@
 package lu.arthurmj.cnfpc_full_stack_project_assignment.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.ticket_commen
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.ticket_comment.UpdateTicketCommentRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.TicketCommentResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.TicketResponseDTO;
-import lu.arthurmj.cnfpc_full_stack_project_assignment.service.GeminiService;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.service.TicketCommentService;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.service.TicketService;
 
@@ -36,9 +34,6 @@ public class TicketController {
 
     @Autowired
     private TicketCommentService ticketCommentService;
-
-    @Autowired
-    private GeminiService geminiService;
 
     // #region Ticket Endpoints
     @GetMapping
@@ -101,16 +96,4 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.unassignTicketFromSupport(ticketId, supportId));
     }
     // #endregion
-
-    @GetMapping("/test-ai/{ticketId}")
-    public ResponseEntity<?> testAI(@PathVariable Long ticketId) {
-
-        TicketResponseDTO ticket = ticketService.getById(ticketId);
-
-        return ResponseEntity.ok(Map.of(
-                "ticketId", ticketId,
-                "title", ticket.getTitle(),
-                "description", ticket.getDescription(),
-                "sentimentAnalysis", geminiService.getTicketSentiment(ticket.getTitle(), ticket.getDescription())));
-    }
 }

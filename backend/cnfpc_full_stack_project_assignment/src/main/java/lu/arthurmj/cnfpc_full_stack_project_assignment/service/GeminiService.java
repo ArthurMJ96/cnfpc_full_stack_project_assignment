@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jakarta.annotation.PostConstruct;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Ticket;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.User;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,11 @@ import com.google.genai.Client;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 
+/**
+ * Service to get ticket priority via Google Gemini AI.
+ * If Gemini AI is disabled or not properly configured via application
+ * properties, defaults to MEDIUM priority.
+ */
 @Service
 public class GeminiService {
   private Client client;
@@ -33,9 +40,25 @@ public class GeminiService {
 
   private static final Map<String, Object> RESPONSE_SCHEMA = createResponseSchema();
 
-  private final String PROMMPT_TEMPLATE = "Analyze the sentiment of the following ticket title and description and respond with the appropriate Priority ("
+  @SuppressWarnings("unused")
+  private final String PROMMPT_TEMPLATE = "Analyze the sentiment of the following ticket author(fullname, job title), title and description and respond with the appropriate Priority ("
       + generatePriorityEnumString() + ") :\n"
-      + "%s\n%s";
+      + "%s\n%s\n%s";
+
+  private final String PROMMPT_TEMPLATE_2 = """
+      Analyze this ticket report and determine the sentiment and priority.
+
+      TICKET DETAILS:
+      Author: %s %s
+      Job Title: %s
+      Subject: %s
+      Description: %s
+
+      GUIDELINES:
+      1. Determine the sentiment (e.g., Angry, Frustrated, Polite, Urgent).
+      2. Assign a Priority from: %s.
+      3. If the user sounds angry or very frustrated, the priority should be at least HIGH.
+      4. Consider the impact of the author's role. High-level leadership roles (CEOs, Founders, Directors) often indicate critical business impact and should be treated with URGENT priority.""";
 
   public GeminiService() {
   }
@@ -49,14 +72,31 @@ public class GeminiService {
     }
   }
 
-  public String getTicketSentiment(String title, String description) {
+  /**
+   * Get ticket priority analysis from Gemini AI.
+   * 
+   * @param ticket TicketResponseDTO containing ticket details.
+   * @return TicketPriority as String or MEDIUM if Gemini is disabled.
+   */
+  public SentimentResponse getTicketSentiment(Ticket ticket) {
+    User author = ticket.getAuthor();
+
+    String prompt = String.format(PROMMPT_TEMPLATE_2,
+        author.getFirstname(), author.getLastname(),
+        author.getJobTitle(),
+        ticket.getTitle(),
+        ticket.getDescription(),
+        generatePriorityEnumString());
+
+    System.out.println("Sending prompt to Gemini: " + prompt);
+
+    SentimentResponse defaultResponse = new SentimentResponse();
+    defaultResponse.setDetectedPriority(TicketPriority.MEDIUM);
+    defaultResponse.setSentiment("Neutral");
+
     if (!enabled || client == null) {
-      return TicketPriority.MEDIUM.name();
+      return defaultResponse;
     }
-
-    String prompt = String.format(PROMMPT_TEMPLATE, title, description);
-
-    // System.out.println("Sending prompt to Gemini: " + prompt);
 
     GenerateContentConfig config = GenerateContentConfig.builder()
         .responseMimeType("application/json")
@@ -67,15 +107,20 @@ public class GeminiService {
     GenerateContentResponse response = client.models.generateContent(model, prompt, config);
 
     try {
-      JsonNode root = objectMapper.readTree(response.text());
-      if (root.has("sentiment")) {
-        return root.get("sentiment").asText();
+      String responseText = response.text();
+      System.out.println("Received Gemini response: " + responseText);
+      JsonNode root = objectMapper.readTree(responseText);
+      if (root.has("detectedPriority")) {
+        SentimentResponse sentimentResponse = new SentimentResponse();
+        sentimentResponse.setDetectedPriority(TicketPriority.valueOf(root.get("detectedPriority").asText()));
+        sentimentResponse.setSentiment(root.get("sentiment").asText());
+        return sentimentResponse;
       }
     } catch (Exception e) {
       System.err.println("Error parsing Gemini response: " + e.getMessage());
     }
 
-    return TicketPriority.MEDIUM.name();
+    return defaultResponse;
   }
 
   public boolean isEnabled() {
@@ -91,16 +136,18 @@ public class GeminiService {
 
     Map<String, Object> sentiment = new HashMap<>();
     sentiment.put("type", "string");
-    sentiment.put("enum", Arrays.asList(generatePriorityEnumArray()));
+    sentiment.put("description", "A short string describing the emotional tone.");
 
-    Map<String, Object> confidence = new HashMap<>();
-    confidence.put("type", "number");
+    Map<String, Object> detectedPriority = new HashMap<>();
+    detectedPriority.put("type", "string");
+    detectedPriority.put("enum", Arrays.asList(generatePriorityEnumArray()));
+    detectedPriority.put("description", "One of: " + generatePriorityEnumString());
 
     properties.put("sentiment", sentiment);
-    properties.put("confidence", confidence);
+    properties.put("detectedPriority", detectedPriority);
 
     schema.put("properties", properties);
-    schema.put("required", Arrays.asList("sentiment"));
+    schema.put("required", Arrays.asList("sentiment", "detectedPriority"));
 
     return schema;
   }
@@ -123,4 +170,25 @@ public class GeminiService {
     return Arrays.stream(TicketPriority.values()).map(Enum::name).toArray(String[]::new);
   }
 
+  public class SentimentResponse {
+
+    private String sentiment;
+    private TicketPriority detectedPriority;
+
+    public String getSentiment() {
+      return sentiment;
+    }
+
+    public void setSentiment(String sentiment) {
+      this.sentiment = sentiment;
+    }
+
+    public TicketPriority getDetectedPriority() {
+      return detectedPriority;
+    }
+
+    public void setDetectedPriority(TicketPriority detectedPriority) {
+      this.detectedPriority = detectedPriority;
+    }
+  }
 }

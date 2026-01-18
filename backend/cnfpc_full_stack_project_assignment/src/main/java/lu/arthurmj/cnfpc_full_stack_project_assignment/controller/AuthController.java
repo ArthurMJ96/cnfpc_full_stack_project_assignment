@@ -1,11 +1,8 @@
 package lu.arthurmj.cnfpc_full_stack_project_assignment.controller;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +13,6 @@ import jakarta.validation.Valid;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.auth.LoginRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.auth.RegisterRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.AuthResponseDTO;
-import lu.arthurmj.cnfpc_full_stack_project_assignment.security.UserPrincipal;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.service.AuthService;
 
 @RestController
@@ -34,18 +30,5 @@ public class AuthController {
   @PostMapping("/register")
   public ResponseEntity<AuthResponseDTO> register(@RequestBody @Valid RegisterRequestDTO dto) {
     return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(dto));
-  }
-
-  @GetMapping("/test")
-  public ResponseEntity<?> getCurrentUser() {
-    Long currentUserId = UserPrincipal.getCurrentUserId();
-    return ResponseEntity.ok(
-        Map.of(
-            "userId", currentUserId,
-            "roles", UserPrincipal.getCurrentUserRoles(),
-            "isAuthenticated", UserPrincipal.isAuthenticated(),
-            "isADMIN", UserPrincipal.isAdmin(),
-            "isSUPPORT", UserPrincipal.isSupport(),
-            "isAUTHOR", UserPrincipal.isAuthor()));
   }
 }
