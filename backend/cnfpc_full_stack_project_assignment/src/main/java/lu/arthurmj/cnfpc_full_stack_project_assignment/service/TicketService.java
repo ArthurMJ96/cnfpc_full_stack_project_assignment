@@ -17,6 +17,7 @@ import lu.arthurmj.cnfpc_full_stack_project_assignment.exception.ResourceNotFoun
 import lu.arthurmj.cnfpc_full_stack_project_assignment.mapper.TicketMapper;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.TicketRepository;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.UserRepository;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.security.UserPrincipal;
 
 @Service
 public class TicketService {
@@ -32,16 +33,33 @@ public class TicketService {
     }
 
     public TicketResponseDTO getById(Long id) {
-        return TicketMapper.toResponseWithComments(ticketRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Ticket", id)), false);
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket", id));
+
+        boolean isAdmin = UserPrincipal.isAdmin();
+
+        // Can only get their own tickets, unless SUPPORT or ADMIN
+        if (!isAdmin && !UserPrincipal.isSupport()) {
+            if (!ticket.getAuthor().getId().equals(UserPrincipal.getCurrentUserId())) {
+                throw new ForbiddenException(UserPrincipal.getCurrentUserId(), "view this ticket");
+            }
+        }
+
+        // If ADMIN, return with deleted comments
+        return TicketMapper.toResponseWithComments(ticket, isAdmin);
     }
 
     public TicketResponseDTO create(CreateTicketRequestDTO dto) {
         Long authorId = dto.getAuthorId();
+        // Must be the user himself
+        if (!UserPrincipal.getCurrentUserId().equals(authorId)) {
+            throw new ForbiddenException(UserPrincipal.getCurrentUserId(), "create this ticket");
+        }
+
         User author = userRepository.findById(authorId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", authorId));
 
-        // Verify author role
+        // Verify AUTHOR role
         if (!author.getRoles().contains(Role.AUTHOR)) {
             throw new ForbiddenException(authorId, "create tickets");
         }
@@ -58,25 +76,48 @@ public class TicketService {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket", ticketId));
 
+        // Must be the author himself or an ADMIN to update the ticket
+        if (!UserPrincipal.getCurrentUserId().equals(ticket.getAuthor().getId()) && !UserPrincipal.isAdmin()) {
+            throw new ForbiddenException(UserPrincipal.getCurrentUserId(), "update this ticket");
+        }
+
+        // Must be ADMIN or SUPPORT to update status (if it was changed)
+        if (dto.getStatus() != null && !ticket.getStatus().equals(dto.getStatus())) {
+            if (!UserPrincipal.isAdmin() && !UserPrincipal.isSupport()) {
+                throw new ForbiddenException(UserPrincipal.getCurrentUserId(), "update ticket status");
+            }
+            ticket.setStatus(dto.getStatus());
+        }
+
+        // Must be ADMIN to update priority (if it was changed)
+        if (dto.getPriority() != null && !ticket.getPriority().equals(dto.getPriority())) {
+            if (!UserPrincipal.isAdmin()) {
+                throw new ForbiddenException(UserPrincipal.getCurrentUserId(), "update ticket priority");
+            }
+            ticket.setPriority(dto.getPriority());
+        }
+
         ticket.setTitle(dto.getTitle());
         ticket.setDescription(dto.getDescription());
-        ticket.setPriority(dto.getPriority());
         if (dto.getDueAt() != null) {
             ticket.setDueAt(dto.getDueAt());
         }
-        ticket.setStatus(dto.getStatus());
-
         return TicketMapper.toResponse(ticketRepository.save(ticket));
     }
 
     public TicketResponseDTO assignTicketToSupport(Long ticketId, Long supportId) {
+        // User can only assign to themselves, unless he is ADMIN
+        if (!UserPrincipal.getCurrentUserId().equals(supportId) && !UserPrincipal.isAdmin()) {
+            throw new ForbiddenException(UserPrincipal.getCurrentUserId(), "assign this ticket");
+        }
+
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket", ticketId));
 
         User support = userRepository.findById(supportId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", supportId));
 
-        // Verify support role
+        // Verify given user has SUPPORT role
         if (!support.getRoles().contains(Role.SUPPORT)) {
             throw new ForbiddenException(supportId, "be assigned to tickets");
         }
@@ -86,6 +127,11 @@ public class TicketService {
     }
 
     public TicketResponseDTO unassignTicketFromSupport(Long ticketId, Long supportId) {
+        // User can only unassign themselves, unless he is ADMIN
+        if (!UserPrincipal.getCurrentUserId().equals(supportId) && !UserPrincipal.isAdmin()) {
+            throw new ForbiddenException(UserPrincipal.getCurrentUserId(), "unassign this ticket");
+        }
+
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket", ticketId));
 

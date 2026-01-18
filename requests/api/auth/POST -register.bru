@@ -1,0 +1,37 @@
+meta {
+  name: POST /register
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/api/auth/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "user@example.com",
+    "password": "user@example.com",
+    "passwordConfirm": "user@example.com",
+    "firstname": "Jon",
+    "lastname": "Doe",
+    "jobTitle": "Janitor"
+  }
+}
+
+script:post-response {
+  function onResponse(res) {
+    let data = res.getBody();
+    bru.setEnvVar("BEARER_TOKEN", data.token);
+    bru.setEnvVar("USER_ID", data.userId);
+  }
+  
+  onResponse(res);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

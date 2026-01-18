@@ -1,0 +1,28 @@
+meta {
+  name: PUT /users
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{base_url}}/api/users
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "id": 2,
+    "firstname": "John",
+    "lastname": "Codeless",
+    "jobTitle": "10x Developer",
+    "roles": [
+      "SUPPORT"
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

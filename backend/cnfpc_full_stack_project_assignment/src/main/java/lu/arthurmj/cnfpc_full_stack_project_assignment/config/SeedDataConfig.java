@@ -8,10 +8,12 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Ticket;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketComment;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.User;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.TicketCommentRepository;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.TicketRepository;
@@ -28,8 +30,8 @@ public class SeedDataConfig {
 
   @Autowired
   private TicketCommentRepository ticketCommentRepository;
-  // @Autowired
-  // private PasswordEncoder passwordEncoder;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   @Bean
   @ConditionalOnProperty(name = "app.seed-data.sample", havingValue = "true")
@@ -50,7 +52,7 @@ public class SeedDataConfig {
       User sUser4 = addSupportUser("engi4@engi4.com", "engi4@engi4.com", "Jack", "Smith", "Noob Developer (Nepo hire)");
 
       // CTO user with support and employee roles
-      User cto = addUser("cto@cto.com", "cto@cto.com", "James", "Jones", "CTO", Set.of(Role.SUPPORT, Role.AUTHOR));
+      addUser("cto@cto.com", "cto@cto.com", "James", "Jones", "CTO", Set.of(Role.SUPPORT, Role.AUTHOR));
 
       // Regular employee users that make tickets
       User ceo = addEmployeeUser("ceo@ceo.com", "ceo@ceo.com", "Jim", "Smith", "CEO");
@@ -60,19 +62,22 @@ public class SeedDataConfig {
 
       // Add tickets
       Ticket t1 = addTicketFromUser(ceo, "Cannot access VPN", "I am unable to connect to the company VPN from home.",
+          TicketPriority.HIGH,
           Set.of(sUser1, sUser2));
       Ticket t2 = addTicketFromUser(accountant, "Software installation request",
-          "Requesting installation of accounting software on my workstation.", Set.of(sUser3));
+          "Requesting installation of accounting software on my workstation.", TicketPriority.MEDIUM, Set.of(sUser3));
       Ticket t3 = addTicketFromUser(cfo, "Email not syncing", "My work email is not syncing on my mobile device.",
-          Set.of(sUser4));
+          TicketPriority.MEDIUM, Set.of(sUser4));
       Ticket t4 = addTicketFromUser(ceo, "Computer won't turn on",
-          "My computer is not powering up when I press the power button.",
+          "My computer is not powering up when I press the power button.", TicketPriority.HIGH,
           Set.of(sUser1));
       Ticket t5 = addTicketFromUser(accountant, "Forgot password",
-          "I forgot my system login password and need a reset.");
-      Ticket t6 = addTicketFromUser(cfo, "Printer jam", "The office printer is jammed again. Please assist.");
+          "I forgot my system login password and need a reset.", TicketPriority.MEDIUM);
+      Ticket t6 = addTicketFromUser(cfo, "Printer jam", "The office printer is jammed again. Please assist.",
+          TicketPriority.HIGH);
       addTicketFromUser(ceo, "Request for new monitor",
-          "My current monitor is outdated. Requesting a new 16K monitor for better productivity.");
+          "My current monitor is outdated. Requesting a new 16K monitor for better productivity.",
+          TicketPriority.URGENT);
 
       // Add comments to tickets
       addCommentToTicket(t1, sUser1, "Hello, I will look into your VPN issue.");
@@ -101,7 +106,7 @@ public class SeedDataConfig {
 
     User user = new User();
     user.setEmail(email);
-    user.setPassword(password);
+    user.setPassword(passwordEncoder.encode(password));
     user.setFirstname(firstname);
     user.setLastname(lastname);
     user.setJobTitle(jobTitle);
@@ -133,7 +138,9 @@ public class SeedDataConfig {
   private Ticket addTicketFromUser(
       User author,
       String title,
-      String description, Set<User> assignedUsers) {
+      String description,
+      TicketPriority priority,
+      Set<User> assignedUsers) {
     if (author == null) {
       return null;
     }
@@ -141,14 +148,15 @@ public class SeedDataConfig {
     ticket.setTitle(title);
     ticket.setDescription(description);
     ticket.setAuthor(author);
+    ticket.setPriority(priority);
     // filter assignedUsers to not include nulls
     ticket.setAssignedTo(assignedUsers.stream().filter(u -> u != null).collect(Collectors.toSet()));
     return ticketRepository.save(ticket);
   }
 
   // create ticket without assigned users
-  private Ticket addTicketFromUser(User author, String title, String description) {
-    return addTicketFromUser(author, title, description, Set.of());
+  private Ticket addTicketFromUser(User author, String title, String description, TicketPriority priority) {
+    return addTicketFromUser(author, title, description, priority, Set.of());
   }
   // #endregion
 

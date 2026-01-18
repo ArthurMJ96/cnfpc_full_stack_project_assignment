@@ -3,10 +3,12 @@ package lu.arthurmj.cnfpc_full_stack_project_assignment.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.user.CreateUserRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.UserResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.User;
 
 public class UserMapper {
+
     public static UserResponseDTO toResponse(User user) {
         if (user == null) {
             return null;
@@ -20,12 +22,12 @@ public class UserMapper {
         return dto;
     }
 
-    public static User toEntity(UserResponseDTO dto) {
+    public static User toEntity(CreateUserRequestDTO dto) {
         if (dto == null) {
             return null;
         }
         User user = new User();
-        user.setId(dto.getId());
+        user.setEmail(dto.getEmail());
         user.setFirstname(dto.getFirstname());
         user.setLastname(dto.getLastname());
         user.setJobTitle(dto.getJobTitle());

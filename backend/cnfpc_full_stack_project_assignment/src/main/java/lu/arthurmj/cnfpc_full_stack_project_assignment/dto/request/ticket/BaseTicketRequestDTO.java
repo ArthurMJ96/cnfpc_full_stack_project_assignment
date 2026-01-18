@@ -2,11 +2,10 @@ package lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.ticket;
 
 import java.time.LocalDateTime;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority;
 
 public class BaseTicketRequestDTO {
 
@@ -18,10 +17,8 @@ public class BaseTicketRequestDTO {
   @Size(min = 2, max = 4096, message = "Description must be between 2 and 4096 characters")
   private String description;
 
-  @NotNull(message = "Invalid Priority.")
-  private TicketPriority priority;
-
   @Future(message = "Due date must be in the future")
+  @Schema(description = "Due date of the ticket. Must be in the future.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   private LocalDateTime dueAt;
 
   public String getTitle() {
@@ -38,14 +35,6 @@ public class BaseTicketRequestDTO {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public TicketPriority getPriority() {
-    return priority;
-  }
-
-  public void setPriority(TicketPriority priority) {
-    this.priority = priority;
   }
 
   public LocalDateTime getDueAt() {
