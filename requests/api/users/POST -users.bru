@@ -1,0 +1,30 @@
+meta {
+  name: POST /users
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{base_url}}/api/users
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "user4658@example.com",
+    "password": "user4658@example.com",
+    "passwordConfirm": "user4658@example.com",
+    "firstname": "Real",
+    "lastname": "Human",
+    "jobTitle": "bot",
+    "roles": [
+      "SUPPORT"
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,13 +1,17 @@
 meta {
-  name: /users/support
+  name: GET /users/{id}
   type: http
-  seq: 3
+  seq: 2
 }
 
 get {
-  url: {{base_url}}/api/users/support
+  url: {{base_url}}/api/users/:id
   body: none
   auth: inherit
+}
+
+params:path {
+  id: 1
 }
 
 settings {

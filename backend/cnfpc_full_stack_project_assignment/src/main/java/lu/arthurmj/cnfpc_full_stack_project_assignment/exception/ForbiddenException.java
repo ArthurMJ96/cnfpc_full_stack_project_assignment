@@ -4,6 +4,5 @@ public class ForbiddenException extends RuntimeException {
 
   public ForbiddenException(Long id, String action) {
     super(String.format("User with ID %d does not have authorization to %s.", id, action));
-
   }
 }

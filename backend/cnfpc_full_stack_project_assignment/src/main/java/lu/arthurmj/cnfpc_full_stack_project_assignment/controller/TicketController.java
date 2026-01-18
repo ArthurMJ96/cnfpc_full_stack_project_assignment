@@ -81,6 +81,7 @@ public class TicketController {
 
     // #region Ticket Assignment Endpoints
     @PostMapping("/{ticketId}/assign/{supportId}")
+    @PreAuthorize("hasAnyRole('SUPPORT', 'ADMIN')")
     public ResponseEntity<TicketResponseDTO> assignTicketToSupport(
             @PathVariable Long ticketId,
             @PathVariable Long supportId) {
@@ -88,6 +89,7 @@ public class TicketController {
     }
 
     @DeleteMapping("/{ticketId}/assign/{supportId}")
+    @PreAuthorize("hasAnyRole('SUPPORT', 'ADMIN')")
     public ResponseEntity<TicketResponseDTO> unassignTicketFromSupport(
             @PathVariable Long ticketId,
             @PathVariable Long supportId) {
