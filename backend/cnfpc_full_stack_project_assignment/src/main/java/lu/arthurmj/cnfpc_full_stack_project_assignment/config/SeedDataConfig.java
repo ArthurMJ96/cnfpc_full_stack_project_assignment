@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Ticket;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketComment;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.User;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.TicketCommentRepository;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.TicketRepository;
@@ -61,19 +62,22 @@ public class SeedDataConfig {
 
       // Add tickets
       Ticket t1 = addTicketFromUser(ceo, "Cannot access VPN", "I am unable to connect to the company VPN from home.",
+          TicketPriority.HIGH,
           Set.of(sUser1, sUser2));
       Ticket t2 = addTicketFromUser(accountant, "Software installation request",
-          "Requesting installation of accounting software on my workstation.", Set.of(sUser3));
+          "Requesting installation of accounting software on my workstation.", TicketPriority.MEDIUM, Set.of(sUser3));
       Ticket t3 = addTicketFromUser(cfo, "Email not syncing", "My work email is not syncing on my mobile device.",
-          Set.of(sUser4));
+          TicketPriority.MEDIUM, Set.of(sUser4));
       Ticket t4 = addTicketFromUser(ceo, "Computer won't turn on",
-          "My computer is not powering up when I press the power button.",
+          "My computer is not powering up when I press the power button.", TicketPriority.HIGH,
           Set.of(sUser1));
       Ticket t5 = addTicketFromUser(accountant, "Forgot password",
-          "I forgot my system login password and need a reset.");
-      Ticket t6 = addTicketFromUser(cfo, "Printer jam", "The office printer is jammed again. Please assist.");
+          "I forgot my system login password and need a reset.", TicketPriority.MEDIUM);
+      Ticket t6 = addTicketFromUser(cfo, "Printer jam", "The office printer is jammed again. Please assist.",
+          TicketPriority.HIGH);
       addTicketFromUser(ceo, "Request for new monitor",
-          "My current monitor is outdated. Requesting a new 16K monitor for better productivity.");
+          "My current monitor is outdated. Requesting a new 16K monitor for better productivity.",
+          TicketPriority.URGENT);
 
       // Add comments to tickets
       addCommentToTicket(t1, sUser1, "Hello, I will look into your VPN issue.");
@@ -134,7 +138,9 @@ public class SeedDataConfig {
   private Ticket addTicketFromUser(
       User author,
       String title,
-      String description, Set<User> assignedUsers) {
+      String description,
+      TicketPriority priority,
+      Set<User> assignedUsers) {
     if (author == null) {
       return null;
     }
@@ -142,14 +148,15 @@ public class SeedDataConfig {
     ticket.setTitle(title);
     ticket.setDescription(description);
     ticket.setAuthor(author);
+    ticket.setPriority(priority);
     // filter assignedUsers to not include nulls
     ticket.setAssignedTo(assignedUsers.stream().filter(u -> u != null).collect(Collectors.toSet()));
     return ticketRepository.save(ticket);
   }
 
   // create ticket without assigned users
-  private Ticket addTicketFromUser(User author, String title, String description) {
-    return addTicketFromUser(author, title, description, Set.of());
+  private Ticket addTicketFromUser(User author, String title, String description, TicketPriority priority) {
+    return addTicketFromUser(author, title, description, priority, Set.of());
   }
   // #endregion
 

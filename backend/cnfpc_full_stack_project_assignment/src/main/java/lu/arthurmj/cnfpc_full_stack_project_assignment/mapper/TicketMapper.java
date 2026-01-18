@@ -45,7 +45,6 @@ public class TicketMapper {
         Ticket ticket = new Ticket();
         ticket.setTitle(dto.getTitle());
         ticket.setDescription(dto.getDescription());
-        ticket.setPriority(dto.getPriority());
         ticket.setDueAt(dto.getDueAt());
         return ticket;
     }
