@@ -121,6 +121,13 @@
 				<groupId>cz.habarta.typescript-generator</groupId>
 				<artifactId>typescript-generator-maven-plugin</artifactId>
 				<version>${typescript-generator.version}</version>
+				<configuration>
+					<jsonLibrary>jackson2</jsonLibrary>
+					<mapEnum>asEnum</mapEnum>
+					<nonConstEnums>false</nonConstEnums>
+					<outputKind>module</outputKind>
+					<outputFileType>implementationFile</outputFileType>
+				</configuration>
 				<executions>
 					<execution>
 						<id>generate-shared-enums</id>
@@ -128,20 +135,39 @@
 							<goal>generate</goal>
 						</goals>
 						<phase>process-classes</phase>
+						<configuration>
+							<classes>
+								<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority</class>
+								<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketStatus</class>
+								<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role</class>
+							</classes>
+							<outputFile>${project.basedir}/../../shared/enums/index.ts</outputFile>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-shared-request-dtos</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<classPatterns>
+								<pattern>lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.**</pattern>
+							</classPatterns>
+							<outputFile>${project.basedir}/../../shared/dtos/index.ts</outputFile>
+							<customTypeMappings>
+								<customTypeMapping>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority:TicketPriority</customTypeMapping>
+								<customTypeMapping>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketStatus:TicketStatus</customTypeMapping>
+								<customTypeMapping>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role:Role</customTypeMapping>
+							</customTypeMappings>
+							<importDeclarations>
+								<importDeclaration>import { TicketPriority } from '../enums'</importDeclaration>
+								<importDeclaration>import { TicketStatus } from '../enums'</importDeclaration>
+								<importDeclaration>import { Role } from '../enums'</importDeclaration>
+							</importDeclarations>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<jsonLibrary>jackson2</jsonLibrary>
-					<mapEnum>asEnum</mapEnum>
-					<classes>
-						<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority</class>
-						<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketStatus</class>
-						<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role</class>
-					</classes>
-					<outputKind>module</outputKind>
-					<outputFileType>implementationFile</outputFileType>
-					<outputFile>${project.basedir}/../../shared/enums/index.ts</outputFile>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

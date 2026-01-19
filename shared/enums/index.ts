@@ -1,22 +1,22 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-01-19 08:27:24.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-19 09:08:05.
 
-export enum TicketPriority {
+export const enum TicketPriority {
     LOW = "LOW",
     MEDIUM = "MEDIUM",
     HIGH = "HIGH",
     URGENT = "URGENT",
 }
 
-export enum TicketStatus {
+export const enum TicketStatus {
     OPEN = "OPEN",
     IN_PROGRESS = "IN_PROGRESS",
     RESOLVED = "RESOLVED",
     CLOSED = "CLOSED",
 }
 
-export enum Role {
+export const enum Role {
     ADMIN = "ADMIN",
     SUPPORT = "SUPPORT",
     AUTHOR = "AUTHOR",
