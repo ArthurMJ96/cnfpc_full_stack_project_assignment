@@ -152,7 +152,7 @@
 						<phase>process-classes</phase>
 						<configuration>
 							<classPatterns>
-								<pattern>lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.**</pattern>
+								<pattern>lu.arthurmj.cnfpc_full_stack_project_assignment.dto.**</pattern>
 							</classPatterns>
 							<outputFile>${project.basedir}/../../shared/dtos/index.ts</outputFile>
 							<customTypeMappings>

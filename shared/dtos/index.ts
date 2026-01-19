@@ -1,10 +1,17 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-01-19 09:08:07.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-19 09:12:44.
 
 import { TicketPriority } from '../enums';
 import { TicketStatus } from '../enums';
 import { Role } from '../enums';
+
+export interface ErrorResponseDTO {
+    status: number;
+    message: string;
+    timestamp: Date;
+    errors: { [index: string]: string };
+}
 
 export interface LoginRequestDTO {
     email: string;
@@ -54,6 +61,49 @@ export interface CreateUserRequestDTO extends RegisterRequestDTO {
 }
 
 export interface UpdateUserRequestDTO {
+    id: number;
+    firstname: string;
+    lastname: string;
+    jobTitle: string;
+    roles: Role[];
+}
+
+export interface AuthResponseDTO {
+    token: string;
+    type: string;
+    userId: number;
+    email: string;
+    roles: Role[];
+}
+
+export interface TicketCommentResponseDTO {
+    id: number;
+    ticketId: number;
+    edited: boolean;
+    deleted: boolean;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date;
+    author: UserResponseDTO;
+}
+
+export interface TicketResponseDTO {
+    id: number;
+    title: string;
+    description: string;
+    status: TicketStatus;
+    priority: TicketPriority;
+    sentiment: string;
+    author: UserResponseDTO;
+    assignedTo: UserResponseDTO[];
+    createdAt: Date;
+    updatedAt: Date;
+    dueAt: Date;
+    commentCount: number;
+    comments: TicketCommentResponseDTO[];
+}
+
+export interface UserResponseDTO {
     id: number;
     firstname: string;
     lastname: string;

@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-01-19 09:08:05.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-19 09:12:42.
 
 export const enum TicketPriority {
     LOW = "LOW",
