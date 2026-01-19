@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-01-19 09:12:44.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-19 09:57:45.
 
 import { TicketPriority } from '../enums';
 import { TicketStatus } from '../enums';
@@ -68,12 +68,10 @@ export interface UpdateUserRequestDTO {
     roles: Role[];
 }
 
-export interface AuthResponseDTO {
+export interface AuthResponseDTO extends UserResponseDTO {
     token: string;
     type: string;
-    userId: number;
     email: string;
-    roles: Role[];
 }
 
 export interface TicketCommentResponseDTO {

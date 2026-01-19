@@ -124,7 +124,7 @@
 				<configuration>
 					<jsonLibrary>jackson2</jsonLibrary>
 					<mapEnum>asEnum</mapEnum>
-					<nonConstEnums>false</nonConstEnums>
+					<nonConstEnums>true</nonConstEnums>
 					<outputKind>module</outputKind>
 					<outputFileType>implementationFile</outputFileType>
 				</configuration>

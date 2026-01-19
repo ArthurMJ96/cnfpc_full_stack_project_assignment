@@ -32,7 +32,13 @@ public class AuthService {
     }
 
     String token = jwtService.generateToken(user);
-    return new AuthResponseDTO(token, user.getId(), user.getEmail(), user.getRoles());
+    return new AuthResponseDTO(token,
+        user.getId(),
+        user.getEmail(),
+        user.getFirstname(),
+        user.getLastname(),
+        user.getJobTitle(),
+        user.getRoles());
   }
 
   public AuthResponseDTO register(RegisterRequestDTO dto) {
@@ -54,6 +60,13 @@ public class AuthService {
 
     User savedUser = userRepository.save(newUser);
     String token = jwtService.generateToken(savedUser);
-    return new AuthResponseDTO(token, savedUser.getId(), savedUser.getEmail(), savedUser.getRoles());
+    return new AuthResponseDTO(
+        token,
+        savedUser.getId(),
+        savedUser.getEmail(),
+        savedUser.getFirstname(),
+        savedUser.getLastname(),
+        savedUser.getJobTitle(),
+        savedUser.getRoles());
   }
 }
