@@ -14,12 +14,16 @@ function formatErrorResponse({ message, errors }: ErrorResponseDTO): FormatError
 export const apiFetch = async <T, E extends string = `/${string}`>(endpoint: E extends `/${string}` ? E : never, options: RequestInit = {}): Promise<T | null> => {
     const url = `${API_BASE_URL}${endpoint}`;
     let errors: FormatErrorResponse = ['Network error', { cause: [] }]
+
+    const token = sessionStorage.getItem("tfl_token");
+
     try {
         const res = await fetch(url, {
             ...options,
             credentials: "include",
             headers: {
                 'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
                 ...(options.headers || {}),
             },
         });
