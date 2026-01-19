@@ -7,12 +7,14 @@ import {
     FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
 import { Link } from "react-router-dom"
 
 export function SignupForm({
     className,
+    loading,
     ...props
-}: React.ComponentProps<"form">) {
+}: React.ComponentProps<"form"> & { loading?: boolean }) {
     return (
         <form className={cn("flex flex-col gap-6", className)} {...props}>
             <FieldGroup>
@@ -32,6 +34,16 @@ export function SignupForm({
                         <Input id="lastname" name="lastname" type="text" placeholder="Doe" required />
                     </Field>
                 </div>
+                <Field>
+
+                    <div className="flex items-center">
+                        <FieldLabel htmlFor="jobTitle">Job Title</FieldLabel>
+                        <span className="ml-auto text-sm"                        >
+                            Cannot be changed later
+                        </span>
+                    </div>
+                    <Input id="jobTitle" name="jobTitle" type="text" placeholder="Software Engineer" required />
+                </Field>
                 <Field>
                     <FieldLabel htmlFor="email">Email</FieldLabel>
                     <Input id="email" name="email" type="email" placeholder="m@example.com" required />
@@ -53,7 +65,10 @@ export function SignupForm({
                     <FieldDescription>Please confirm your password.</FieldDescription>
                 </Field>
                 <Field>
-                    <Button type="submit">Create Account</Button>
+                    <Button type="submit" disabled={loading}>
+                        {loading && <Spinner />}
+                        Create Account
+                    </Button>
                 </Field>
                 <Field>
                     <FieldDescription className="px-6 text-center">

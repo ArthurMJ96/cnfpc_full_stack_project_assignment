@@ -7,12 +7,14 @@ import {
     FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
 import { Link } from "react-router-dom"
 
 export function LoginForm({
     className,
+    loading,
     ...props
-}: React.ComponentProps<"form">) {
+}: React.ComponentProps<"form"> & { loading?: boolean }) {
     return (
         <form className={cn("flex flex-col gap-6", className)} {...props}>
             <FieldGroup>
@@ -24,14 +26,17 @@ export function LoginForm({
                 </div>
                 <Field>
                     <FieldLabel htmlFor="email">Email</FieldLabel>
-                    <Input id="email" name="email" type="email" placeholder="m@example.com" required />
+                    <Input id="email" name="email" type="email" placeholder="m@example.com" defaultValue="admin@admin.com" required />
                 </Field>
                 <Field>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input id="password" name="password" type="password" required />
+                    <Input id="password" name="password" type="password" defaultValue="admin@admin.com" required />
                 </Field>
                 <Field>
-                    <Button type="submit">Login</Button>
+                    <Button type="submit" disabled={loading}>
+                        {loading && <Spinner />}
+                        Login
+                    </Button>
                 </Field>
                 <Field>
                     <FieldDescription className="text-center">

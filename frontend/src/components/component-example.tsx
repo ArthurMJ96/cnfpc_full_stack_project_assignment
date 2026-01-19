@@ -91,16 +91,32 @@ import {
   LogOutIcon,
 } from "lucide-react";
 import { TicketPriority, TicketStatus } from "@shared/enums";
+import { ModeToggle } from "@/components/theme-toggle";
 
 export function ComponentExample() {
   return (
     <ExampleWrapper>
       <CardExample />
       <FormExample />
-      <div>
-        <p>TicketPriority enum: {Object.values(TicketPriority).join(", ")}</p>
-        <p>TicketStatus enum: {Object.values(TicketStatus).join(", ")}</p>
-      </div>
+      <Example title="Enums">
+        <p>TicketPriority enum: {
+          Object.values(TicketPriority).map((priority: TicketPriority) => (
+            <Badge key={priority} className="ml-2">
+              {priority}
+            </Badge>
+          ))}
+        </p>
+        <p>TicketStatus enum: {
+          Object.values(TicketStatus).map((status: TicketStatus) => (
+            <Badge key={status} className="ml-2">
+              {status}
+            </Badge>
+          ))}
+        </p>
+      </Example>
+      <Example title="Mode Toggle">
+        <ModeToggle />
+      </Example>
     </ExampleWrapper>
   );
 }
