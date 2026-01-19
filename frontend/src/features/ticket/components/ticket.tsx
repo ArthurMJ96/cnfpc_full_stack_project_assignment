@@ -1,4 +1,3 @@
-import { AvatarRing } from "@/components/avatar-ring"
 import { Badge } from "@/components/ui/badge"
 import {
     Card,
@@ -18,8 +17,7 @@ import { TicketPriority } from "@shared/enums"
 import type { TicketResponseDTO } from "@shared/dtos"
 import { CalendarIcon, MessageSquareIcon, ClockIcon } from "lucide-react"
 import { useAuth } from "@/features/auth/hooks/useAuth"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { UserAvatar } from "@/components/user-avatar"
 
 type PriorityVariant = "default" | "secondary" | "destructive" | "outline"
 
@@ -29,7 +27,7 @@ interface TicketProps {
 }
 
 export function Ticket({ data, onClick }: TicketProps) {
-    const { isAdmin } = useAuth();
+    const { isAdmin, isSupport } = useAuth();
     const priorityColor = {
         [TicketPriority.LOW]: "secondary",
         [TicketPriority.MEDIUM]: "outline",
@@ -42,29 +40,17 @@ export function Ticket({ data, onClick }: TicketProps) {
             <CardHeader className="border-b bg-muted/5">
 
                 <CardDescription className="flex gap-2">
-                    {/* <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Badge variant={priorityColor[data.priority] as PriorityVariant}>
-                                {data.priority}
-                            </Badge>
-                        </TooltipTrigger>
-                        <TooltipContent align="center" side="left">
-                            <p>Priority Status</p>
-                        </TooltipContent>
-                    </Tooltip> */}
                     <span className="line-clamp-1">
-                        {isAdmin && `#${data.id}`} • {new Date(data.createdAt).toLocaleDateString()}
+                        {isAdmin && `#${data.id} • `}{new Date(data.createdAt).toLocaleDateString()}
                     </span>
                 </CardDescription>
-                <CardTitle className="line-clamp-1 mr-2" title={data.title}>
+                <CardTitle className="line-clamp-1 mr-2 text-lg" title={data.title}>
                     {data.title}
                 </CardTitle>
                 <CardAction>
 
                     <Badge variant="outline" className="flex items-center gap-2 px-2 py-1 pl-1.5 h-auto rounded-md">
-                        <Avatar>
-                            <AvatarFallback className='text-xs'>{data.author.firstname[0]}{data.author.lastname[0]}</AvatarFallback>
-                        </Avatar>
+                        <UserAvatar firstname={data.author.firstname} lastname={data.author.lastname} />
                         <div className="flex flex-col gap-0.5 mr-auto justify-around">
                             <span className="text-xs font-medium leading-none">{data.author.firstname} {data.author.lastname}</span>
                             <span className="text-[10px] text-muted-foreground leading-none">{data.author.jobTitle}</span>
@@ -79,7 +65,6 @@ export function Ticket({ data, onClick }: TicketProps) {
             </CardContent>
             <CardFooter className="border-t bg-muted/5 pt-3 mt-auto">
                 <div className="flex items-center gap-3 w-full">
-                    
                     <Badge variant="outline" className="text-[10px] px-1.5 h-5 font-normal">
                         <span className="sr-only">Status:</span>{data.status.replace('_', ' ')}
                     </Badge>
@@ -100,6 +85,16 @@ export function Ticket({ data, onClick }: TicketProps) {
                         )}
                     </div>
                 </div>
+                {isSupport && <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Badge variant={priorityColor[data.priority] as PriorityVariant}>
+                            {data.priority}
+                        </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent align="center" side="left">
+                        <p>Priority Status</p>
+                    </TooltipContent>
+                </Tooltip>}
             </CardFooter>
         </Card>
     )
