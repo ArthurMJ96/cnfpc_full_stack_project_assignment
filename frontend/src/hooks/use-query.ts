@@ -9,6 +9,7 @@ interface UseQueryOptions<TData> {
 
 export const useQuery = <TData>(
   queryFn: () => Promise<TData>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   deps: any[] = [],
   options: UseQueryOptions<TData> = {},
 ) => {
@@ -48,6 +49,7 @@ export const useQuery = <TData>(
     if (enabled) {
       refetch().catch(() => {});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled, refetch, ...deps]);
 
   return { data, loading, error, refetch, setData };

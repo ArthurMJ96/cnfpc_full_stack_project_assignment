@@ -1,6 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useTicket } from "@/features/ticket/hooks/useTicket";
-import { useAddComment } from "@/features/ticket/hooks/useTicketActions";
+import {
+  useAddComment,
+  useDeleteComment,
+  useUpdateComment,
+} from "@/features/ticket/hooks/useTicketActions";
 import { Ticket } from "@/features/ticket/components/ticket";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -11,24 +15,18 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { UserAvatar } from "@/components/user-avatar";
 import { Card } from "@/components/ui/card";
-import { getRelativeTime } from "@/lib/utils";
-import type { TicketCommentResponseDTO } from "@shared/dtos";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { ChevronsDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { TextareaSubmit } from "@/components/textarea-submit";
 import ErrorAlert from "@/components/error-alert";
+import { TicketComment } from "@/features/ticket/components/ticket-comment";
 
 export function TicketDetailsPage() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { id } = useParams();
   const { ticket, loading, refreshTicket } = useTicket(Number(id));
   const [commentText, setCommentText] = useState("");
@@ -42,28 +40,56 @@ export function TicketDetailsPage() {
     onSuccess: (comment) => {
       refreshTicket().catch(() => ticket?.comments.push(comment));
       setCommentText("");
-      setTimeout(() => {
-        scrollToBottom();
+      setTimeout(scrollToBottom);
+    },
+  });
+
+  const { mutate: deleteComment } = useDeleteComment({
+    onSuccess: (_res, id) => {
+      refreshTicket().catch(() => {
+        ticket?.comments.splice(
+          ticket?.comments.findIndex((comment) => comment.id === id),
+          1,
+        );
       });
     },
   });
 
-  const [maxInitialId, setMaxInitialId] = useState<number>(-1);
-  useEffect(() => {
-    if (ticket && maxInitialId === -1) {
-      const max =
-        ticket.comments.length > 0
-          ? Math.max(...ticket.comments.map((c) => c.id))
-          : 0;
-      setMaxInitialId(max);
-    }
-  }, [ticket, maxInitialId]);
+  const { mutate: updateComment } = useUpdateComment({
+    onSuccess: (_res, updatedComment) => {
+      refreshTicket().catch(() => {
+        const index = ticket?.comments.findIndex(
+          (comment) => comment.id === updatedComment.id,
+        );
+        if (index !== undefined && index !== -1) {
+          const comment = ticket?.comments[index];
+          if (comment) {
+            comment.content = updatedComment.content;
+            comment.edited = true;
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            comment.updatedAt = new Date().toISOString();
+          }
+        }
+      });
+    },
+  });
+
+  // Determine the max comment ID on initial load for "new comment" highlighting
+  const [maxInitialId, setMaxInitialId] = useState<number | null>(null);
+  if (ticket && maxInitialId === null) {
+    const max =
+      ticket.comments.length > 0
+        ? Math.max(...ticket.comments.map((c) => c.id))
+        : 0;
+    setMaxInitialId(max);
+  }
 
   if (!ticket && loading) return <div>Loading...</div>;
   if (!ticket) return <div>Ticket #{id} Not found</div>;
 
   const scrollToBottom = () => {
-    anchor.current?.scrollIntoView({ behavior: "smooth" });
+    anchor.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
@@ -81,7 +107,7 @@ export function TicketDetailsPage() {
     <div className="flex flex-col gap-4 pb-50">
       <div className="grid grid-cols-[auto_360px] gap-10 relative">
         <div>
-          <div className="mt-0 sticky top-12 bg-background z-10 pt-6">
+          <div className="mt-0 sticky top-12 bg-background z-10 pt-4">
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
@@ -111,11 +137,19 @@ export function TicketDetailsPage() {
                 .map((c) => (
                   <TicketComment
                     key={c.id}
-                    {...c}
+                    comment={c}
                     // Find comments that were added after initial load, for QOL feedback purposes
-                    isNew={c.id > maxInitialId}
+                    isNew={c.id > (maxInitialId ?? Infinity)}
+                    isAdmin={isAdmin}
+                    user={user!}
+                    onDelete={(c) => deleteComment(c.id)}
+                    onEdit={updateComment}
                   />
                 ))}
+              <div
+                ref={anchor}
+                className="relative border-l-2 pl-6 sm:pl-8 ml-10 h-1 -scroll-m-72"
+              />
             </div>
           </div>
 
@@ -180,65 +214,10 @@ export function TicketDetailsPage() {
               </div>
             </>
           )}
-          <div ref={anchor}></div>
         </div>
 
         <div className="relative">
           <Card className="sticky top-18 min-h-125"></Card>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function TicketComment({
-  author,
-  content,
-  createdAt,
-  edited,
-  isNew,
-}: TicketCommentResponseDTO & { isNew?: boolean }) {
-  return (
-    <div
-      className={
-        "group relative hover:bg-muted/80 rounded-lg transition-all" +
-        (isNew ? " animate-flash-muted" : "")
-      }
-    >
-      <div className="flex items-start">
-        <div className="relative pb-4 border-l-2 group-last:pb-10 pl-6 sm:pl-8 space-y-2 ml-10">
-          {/* User as Timeline Dot */}
-          <UserAvatar
-            className="absolute -translate-x-1/2 -left-px top-6"
-            firstname={author.firstname}
-            lastname={author.lastname}
-          />
-
-          {/* Content */}
-          <h3 className="mt-6 font-semibold tracking-[-0.01em] text-sm">
-            {author.firstname} {author.lastname}
-          </h3>
-
-          <h3 className="text-xs text-muted-foreground font-normal tracking-[-0.01em]">
-            <Tooltip>
-              <TooltipTrigger>
-                {getRelativeTime(new Date(createdAt).getTime())}
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                {new Date(createdAt).toLocaleString(undefined, {
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })}
-              </TooltipContent>
-            </Tooltip>
-            {edited && (
-              <span className="italic text-muted-foreground"> (edited)</span>
-            )}
-            <span className="select-none">{` • ${author.jobTitle}`}</span>
-          </h3>
-          <p className="text-sm sm:text-base text-muted-foreground pl-5 pr-1">
-            {content}
-          </p>
         </div>
       </div>
     </div>

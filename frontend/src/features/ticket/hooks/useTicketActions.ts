@@ -1,37 +1,34 @@
 import { ticketApi } from "../api";
-import { useMutation } from "@/hooks/use-mutation";
-import type { ErrorWithCause } from "@/lib/api";
+import { useMutation, type UseMutationOptions } from "@/hooks/use-mutation";
 
-type MutationOptions<T> = {
-  onSuccess?: (data: T) => void;
-  onError?: (error: ErrorWithCause) => void;
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MutationOptions<TMethod extends (...args: any) => any> =
+  UseMutationOptions<Awaited<ReturnType<TMethod>>, Parameters<TMethod>[number]>;
 
-export const useCreateTicket = (options?: MutationOptions<any>) =>
-  useMutation(ticketApi.create, options);
+export const useCreateTicket = (
+  options?: MutationOptions<typeof ticketApi.create>,
+) => useMutation(ticketApi.create, options);
 
-export const useUpdateTicket = (options?: MutationOptions<any>) =>
-  useMutation(ticketApi.update, options);
+export const useUpdateTicket = (
+  options?: MutationOptions<typeof ticketApi.update>,
+) => useMutation(ticketApi.update, options);
 
-export const useAssignSupport = (options?: MutationOptions<any>) =>
-  useMutation(
-    ({ ticketId, supportId }: { ticketId: number; supportId: number }) =>
-      ticketApi.assignSupport(ticketId, supportId),
-    options,
-  );
+export const useAssignSupport = (
+  options?: MutationOptions<typeof ticketApi.assignSupport>,
+) => useMutation(ticketApi.assignSupport, options);
 
-export const useUnassignSupport = (options?: MutationOptions<void>) =>
-  useMutation(
-    ({ ticketId, supportId }: { ticketId: number; supportId: number }) =>
-      ticketApi.unassignSupport(ticketId, supportId),
-    options,
-  );
+export const useUnassignSupport = (
+  options?: MutationOptions<typeof ticketApi.unassignSupport>,
+) => useMutation(ticketApi.unassignSupport, options);
 
-export const useAddComment = (options?: MutationOptions<any>) =>
-  useMutation(ticketApi.addComment, options);
+export const useAddComment = (
+  options?: MutationOptions<typeof ticketApi.addComment>,
+) => useMutation(ticketApi.addComment, options);
 
-export const useUpdateComment = (options?: MutationOptions<any>) =>
-  useMutation(ticketApi.updateComment, options);
+export const useUpdateComment = (
+  options?: MutationOptions<typeof ticketApi.updateComment>,
+) => useMutation(ticketApi.updateComment, options);
 
-export const useDeleteComment = (options?: MutationOptions<void>) =>
-  useMutation(ticketApi.deleteComment, options);
+export const useDeleteComment = (
+  options?: MutationOptions<typeof ticketApi.deleteComment>,
+) => useMutation(ticketApi.deleteComment, options);

@@ -2,30 +2,30 @@ import { useState, useCallback } from "react";
 import type { ErrorWithCause } from "@/lib/api";
 
 type MutationFunction<TData, TVariables> = (
-  variables: TVariables,
+  ...variables: TVariables[]
 ) => Promise<TData>;
 
-interface UseMutationOptions<TData> {
-  onSuccess?: (data: TData) => void;
+export interface UseMutationOptions<TData, TVariables> {
+  onSuccess?: (result: TData, ...variables: TVariables[]) => void;
   onError?: (error: ErrorWithCause) => void;
 }
 
 export const useMutation = <TData, TVariables = void>(
   mutationFn: MutationFunction<TData, TVariables>,
-  options: UseMutationOptions<TData> = {},
+  options: UseMutationOptions<TData, TVariables> = {},
 ) => {
   const [data, setData] = useState<TData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorWithCause | undefined>();
 
   const mutate = useCallback(
-    async (variables: TVariables) => {
+    async <T extends TVariables>(...variables: T[]) => {
       setLoading(true);
       setError(undefined);
       try {
-        const result = await mutationFn(variables);
+        const result = await mutationFn(...variables);
         setData(result);
-        options.onSuccess?.(result);
+        options.onSuccess?.(result, ...variables);
         return result;
       } catch (err) {
         const error = err as ErrorWithCause;
