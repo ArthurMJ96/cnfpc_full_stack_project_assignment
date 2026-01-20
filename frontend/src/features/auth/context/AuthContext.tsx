@@ -1,6 +1,7 @@
 import { createContext, useState, type ReactNode } from "react";
 import type { AuthResponseDTO } from "@shared/dtos";
 import { Role } from "@shared/enums";
+import { TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from "@/lib/api";
 
 interface AuthContextType {
     user: AuthResponseDTO | null;
@@ -17,10 +18,10 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [token, setToken] = useState<string | null>(() => sessionStorage.getItem("tfl_token") || null);
+    const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_STORAGE_KEY) || null);
 
     const [user, setUser] = useState<AuthResponseDTO | null>(() => {
-        const storedUser = sessionStorage.getItem("tfl_user");
+        const storedUser = localStorage.getItem(USER_STORAGE_KEY);
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
@@ -28,14 +29,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = (userData: AuthResponseDTO, authToken: string) => {
         setUser(userData);
         setToken(authToken);
-        sessionStorage.setItem("tfl_token", authToken);
-        sessionStorage.setItem("tfl_user", JSON.stringify(userData));
+        localStorage.setItem(TOKEN_STORAGE_KEY, authToken);
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
     };
     const logout = () => {
         setUser(null);
         setToken(null);
-        sessionStorage.removeItem("tfl_token");
-        sessionStorage.removeItem("tfl_user");
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+        localStorage.removeItem(USER_STORAGE_KEY);
     }
 
 

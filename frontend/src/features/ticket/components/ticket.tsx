@@ -26,7 +26,7 @@ interface TicketProps {
     onClick?: () => void
 }
 
-export function Ticket({ data, onClick }: TicketProps) {
+export function Ticket({ data, onClick, ...props }: React.ComponentProps<"div"> & TicketProps) {
     const { isAdmin, isSupport } = useAuth();
     const priorityColor = {
         [TicketPriority.LOW]: "secondary",
@@ -36,9 +36,8 @@ export function Ticket({ data, onClick }: TicketProps) {
     } as const
 
     return (
-        <Card size="sm" className={"hover:bg-muted/5 transition-all group" + (onClick ? " cursor-pointer" : "")} onClick={onClick}>
+        <Card size="sm" className={"group" + (onClick ? "hover:bg-muted/5 transition-all cursor-pointer" : "")} onClick={onClick} {...props}>
             <CardHeader className="border-b bg-muted/5">
-
                 <CardDescription className="flex gap-2">
                     <span className="line-clamp-1">
                         {isAdmin && `#${data.id} • `}{new Date(data.createdAt).toLocaleDateString()}
@@ -48,8 +47,7 @@ export function Ticket({ data, onClick }: TicketProps) {
                     {data.title}
                 </CardTitle>
                 <CardAction>
-
-                    <Badge variant="outline" className="flex items-center gap-2 px-2 py-1 pl-1.5 h-auto rounded-md">
+                    <Badge variant="ghost" className="flex items-center gap-2 px-2 py-1 pl-1.5 h-auto rounded-md">
                         <UserAvatar firstname={data.author.firstname} lastname={data.author.lastname} />
                         <div className="flex flex-col gap-0.5 mr-auto justify-around">
                             <span className="text-xs font-medium leading-none">{data.author.firstname} {data.author.lastname}</span>
@@ -58,11 +56,13 @@ export function Ticket({ data, onClick }: TicketProps) {
                     </Badge>
                 </CardAction>
             </CardHeader>
+
             <CardContent>
                 <p className="text-muted-foreground line-clamp-2 min-h-[2.5em] text-sm">
                     {data.description}
                 </p>
             </CardContent>
+
             <CardFooter className="border-t bg-muted/5 pt-3 mt-auto">
                 <div className="flex items-center gap-3 w-full">
                     <Badge variant="outline" className="text-[10px] px-1.5 h-5 font-normal">
@@ -87,7 +87,7 @@ export function Ticket({ data, onClick }: TicketProps) {
                 </div>
                 {isSupport && <Tooltip>
                     <TooltipTrigger asChild>
-                        <Badge variant={priorityColor[data.priority] as PriorityVariant}>
+                        <Badge variant={priorityColor[data.priority] as PriorityVariant} className="font-semibold">
                             {data.priority}
                         </Badge>
                     </TooltipTrigger>
