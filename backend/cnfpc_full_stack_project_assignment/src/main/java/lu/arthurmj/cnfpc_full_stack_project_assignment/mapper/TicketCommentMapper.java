@@ -16,6 +16,7 @@ public class TicketCommentMapper {
         dto.setAuthor(UserMapper.toResponse(ticketComment.getAuthor()));
         dto.setTicketId(ticketComment.getTicket().getId());
         dto.setEdited(ticketComment.isEdited());
+        dto.setDeleted(ticketComment.isDeleted());
         dto.setCreatedAt(ticketComment.getCreatedAt());
         dto.setUpdatedAt(ticketComment.getUpdatedAt());
         return dto;
