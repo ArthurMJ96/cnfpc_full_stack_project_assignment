@@ -1,16 +1,15 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import type { UserResponseDTO } from '@shared/dtos'
 
 export function UserAvatar({
-    firstname,
-    lastname,
+    user,
     ...props
 }: {
-    firstname: string;
-    lastname: string;
+    user: UserResponseDTO
 } & React.ComponentProps<typeof Avatar>) {
     return (
         <Avatar className='ring-ring ring-2' {...props}>
-            <AvatarFallback className='text-xs'>{firstname[0]}{lastname[0]}</AvatarFallback>
+            <AvatarFallback className='text-xs'>{user.firstname[0]}{user.lastname[0]}</AvatarFallback>
         </Avatar>
     )
 }

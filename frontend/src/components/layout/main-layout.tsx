@@ -5,7 +5,7 @@ export function MainLayout() {
     return (
         <div className="min-h-screen bg-background font-sans antialiased">
             <NavBar />
-            <main className="container py-6 mx-auto">
+            <main>
                 <Outlet />
             </main>
         </div>

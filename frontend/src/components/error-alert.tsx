@@ -6,7 +6,7 @@ export type ErrorAlertProps = {
     cause?: string[];
 }
 
-export default function ErrorAlert({ error: { message, cause, ...props } }: { error: ErrorAlertProps } & React.ComponentProps<typeof Alert>) {
+export function ErrorAlert({ error: { message, cause, ...props } }: { error: ErrorAlertProps } & React.ComponentProps<typeof Alert>) {
     return (
         <Alert variant="destructive" {...props}>
             <AlertCircleIcon />

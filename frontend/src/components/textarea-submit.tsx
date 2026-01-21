@@ -8,7 +8,10 @@ import { cn } from "@/lib/utils";
 import { Spinner } from "./ui/spinner";
 import { useRef } from "react";
 
+export { InputGroupButton as TextareaButton } from "@/components/ui/input-group";
+
 export function TextareaSubmit({
+  children,
   className,
   loading,
   textareaClassName,
@@ -49,18 +52,18 @@ export function TextareaSubmit({
         />
         <InputGroupAddon
           align="block-end"
-          className="pt-0"
+          className="pt-0 flex justify-end"
           onClick={forwardFocus}
         >
+          {children}
           <InputGroupButton
             type="submit"
-            className="ml-auto"
             size="sm"
             variant="default"
             disabled={loading}
           >
             {loading && <Spinner />}
-            Submit
+            Send
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
