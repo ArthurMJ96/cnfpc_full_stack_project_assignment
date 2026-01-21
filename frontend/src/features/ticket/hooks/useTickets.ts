@@ -1,13 +1,19 @@
 import { ticketApi } from "../api";
 import { useQuery } from "@/hooks/use-query";
+import { useTicketStore } from "../contexts/TicketStoreContext";
 
 export const useTickets = () => {
+  const { setTickets, tickets: ticketStore } = useTicketStore();
+
   const {
-    data: tickets,
     loading,
     error,
     refetch: refreshTickets,
-  } = useQuery(ticketApi.getAll);
+  } = useQuery(ticketApi.getAll, [], {
+    onSuccess: (data) => setTickets(data),
+  });
 
-  return { tickets: tickets || [], loading, error, refreshTickets };
+  const tickets = Object.values(ticketStore);
+
+  return { tickets, loading, error, refreshTickets };
 };

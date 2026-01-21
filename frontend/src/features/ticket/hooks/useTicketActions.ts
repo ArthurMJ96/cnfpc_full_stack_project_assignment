@@ -1,5 +1,6 @@
 import { ticketApi } from "../api";
 import { useMutation, type UseMutationOptions } from "@/hooks/use-mutation";
+import { useTicketStore } from "../contexts/TicketStoreContext";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MutationOptions<TMethod extends (...args: any) => any> =
@@ -7,19 +8,55 @@ type MutationOptions<TMethod extends (...args: any) => any> =
 
 export const useCreateTicket = (
   options?: MutationOptions<typeof ticketApi.create>,
-) => useMutation(ticketApi.create, options);
+) => {
+  const { setTicket } = useTicketStore();
+  return useMutation(ticketApi.create, {
+    ...options,
+    onSuccess: (data, ...args) => {
+      setTicket(data);
+      options?.onSuccess?.(data, ...args);
+    },
+  });
+};
 
 export const useUpdateTicket = (
   options?: MutationOptions<typeof ticketApi.update>,
-) => useMutation(ticketApi.update, options);
+) => {
+  const { setTicket } = useTicketStore();
+  return useMutation(ticketApi.update, {
+    ...options,
+    onSuccess: (data, ...args) => {
+      setTicket(data);
+      options?.onSuccess?.(data, ...args);
+    },
+  });
+};
 
 export const useAssignSupport = (
   options?: MutationOptions<typeof ticketApi.assignSupport>,
-) => useMutation(ticketApi.assignSupport, options);
+) => {
+  const { setTicket } = useTicketStore();
+  return useMutation(ticketApi.assignSupport, {
+    ...options,
+    onSuccess: (data, ...args) => {
+      setTicket(data);
+      options?.onSuccess?.(data, ...args);
+    },
+  });
+};
 
 export const useUnassignSupport = (
   options?: MutationOptions<typeof ticketApi.unassignSupport>,
-) => useMutation(ticketApi.unassignSupport, options);
+) => {
+  const { setTicket } = useTicketStore();
+  return useMutation(ticketApi.unassignSupport, {
+    ...options,
+    onSuccess: (data, ...args) => {
+      setTicket(data);
+      options?.onSuccess?.(data, ...args);
+    },
+  });
+};
 
 export const useAddComment = (
   options?: MutationOptions<typeof ticketApi.addComment>,

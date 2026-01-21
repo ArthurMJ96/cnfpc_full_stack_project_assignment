@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@/providers/theme-provider"
 import { AuthProvider } from "@/features/auth/context/AuthContext";
+import { TicketStoreProvider } from "@/features/ticket/contexts/TicketStoreContext";
 import LoginPage from "@/pages/auth/login";
 import SignupPage from "@/pages/auth/signup";
 import HomePage from "@/pages/Home";
@@ -18,9 +19,10 @@ export function App() {
   return (
     <ThemeProvider defaultTheme="light">
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Auth Routes (Login, Signup) */}
+        <TicketStoreProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Auth Routes (Login, Signup) */}
             <Route element={<AuthLayout />}>
               <Route path="/login" element={<ProtectedRoute guestOnly><LoginPage /></ProtectedRoute>} />
               <Route path="/signup" element={<ProtectedRoute guestOnly><SignupPage /></ProtectedRoute>} />
@@ -36,7 +38,8 @@ export function App() {
               <Route path="/error" element={<ProtectedRoute><ErrorPage /></ProtectedRoute>} />
             </Route>
           </Routes>
-        </BrowserRouter>
+          </BrowserRouter>
+        </TicketStoreProvider>
       </AuthProvider>
     </ThemeProvider>
   )
