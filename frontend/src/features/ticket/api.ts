@@ -25,9 +25,9 @@ export const ticketApi = {
         body: JSON.stringify(data),
     }),
     assignSupport: (ticketId: number, supportId: number) => apiFetch<TicketResponseDTO>(`/tickets/${ticketId}/assign/${supportId}`, {
-        method: 'PUT',
+        method: 'POST',
     }),
-    unassignSupport: (ticketId: number, supportId: number) => apiFetch<void>(`/tickets/${ticketId}/assign/${supportId}`, {
+    unassignSupport: (ticketId: number, supportId: number) => apiFetch<TicketResponseDTO>(`/tickets/${ticketId}/assign/${supportId}`, {
         method: 'DELETE',
     }),
     addComment: (data: CreateTicketCommentRequestDTO) => apiFetch<TicketCommentResponseDTO>('/tickets/comment', {

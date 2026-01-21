@@ -17,9 +17,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { UserAvatar } from "@/components/user-avatar";
 import { getRelativeTime } from "@/lib/utils";
-import { SquarePen, X } from "lucide-react";
+import { Pencil, PencilOff, X } from "lucide-react";
 import type { TicketCommentResponseDTO } from "@shared/dtos";
-import { TextareaSubmit } from "@/components/textarea-submit";
+import { TextareaButton, TextareaSubmit } from "@/components/textarea-submit";
 import { useState } from "react";
 
 export function TicketComment({
@@ -48,6 +48,7 @@ export function TicketComment({
     onEdit?.({ ...comment, content: editedContent });
     setIsEditing(false);
   };
+
   return (
     <div
       className={
@@ -64,20 +65,19 @@ export function TicketComment({
         </div>
       )}
       <div className="flex items-start w-full pr-24">
-        <div className="relative pb-4 border-l-2 group-last:pb-10 pl-6 sm:pl-8 space-y-2 ml-10 w-full">
+        <div className="relative pb-2 border-l-2 group-last:pb-10 pl-6 sm:pl-8 space-y-2 ml-10 w-full">
           {/* User as Timeline Dot */}
           <UserAvatar
             className="absolute -translate-x-1/2 -left-px top-6"
-            firstname={comment.author.firstname}
-            lastname={comment.author.lastname}
+            user={comment.author}
           />
 
-          {/* Content */}
-          <h3 className="mt-6 font-semibold tracking-[-0.01em] text-sm">
+          {/* Comment Details */}
+          <h3 className="mt-8 font-semibold tracking-[-0.01em] text-sm">
             {comment.author.firstname} {comment.author.lastname}
+            <span className="select-none text-xs text-muted-foreground font-normal tracking-[-0.01em]">{` • ${comment.author.jobTitle}`}</span>
           </h3>
-
-          <h3 className="text-xs text-muted-foreground font-normal tracking-[-0.01em]">
+          <h3 className=" text-xs text-muted-foreground font-normal tracking-[-0.01em]">
             <Tooltip>
               <TooltipTrigger>
                 {getRelativeTime(new Date(comment.updatedAt).getTime())}
@@ -117,9 +117,10 @@ export function TicketComment({
             {comment.edited && (
               <span className="italic text-muted-foreground"> (edited)</span>
             )}
-            <span className="select-none">{` • ${comment.author.jobTitle}`}</span>
           </h3>
-          {isEditing ? (
+
+          {/* Comment Content or Edit Form */}
+          {!comment.deleted && isEditing ? (
             <form onSubmit={handleSubmit}>
               <TextareaSubmit
                 className="w-full"
@@ -128,26 +129,54 @@ export function TicketComment({
                 onChange={(e) => setEditedContent(e.target.value)}
                 onEnterPress={handleSubmit}
                 name="commentEdit"
-              />
+              >
+                <TextareaButton
+                  variant="outline"
+                  type="button"
+                  size="sm"
+                  onClick={toggleEdit}
+                >
+                  Cancel
+                </TextareaButton>
+              </TextareaSubmit>
             </form>
           ) : (
-            <p className="text-sm sm:text-base text-muted-foreground pl-5 pr-1">
+            <p className="text-sm sm:text-base text-muted-foreground pl-0 pr-1">
               {comment.content}
             </p>
           )}
         </div>
         <div className="absolute bottom-2 right-2 text-xs w-24 flex justify-end gap-1">
+
+          {comment.author.id === user?.id && !comment.deleted && (
+            // Edit Button
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="destructive"
+                  size="icon-lg"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity bg-sky-700/10! hover:bg-sky-700/20! text-sky-700"
+                  onClick={toggleEdit}
+                >
+                  {isEditing ? <PencilOff /> : <Pencil />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Edit comment</TooltipContent>
+            </Tooltip>
+          )}
+
           {(isAdmin || comment.author.id === user?.id) && !comment.deleted && (
+            // Delete Button with Confirmation Dialog
             <AlertDialog>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <AlertDialogTrigger asChild>
                     <Button
                       variant="destructive"
-                      size="icon-sm"
+                      size="icon-lg"
                       className="opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <X className="size-4" />
+                      <X />
                     </Button>
                   </AlertDialogTrigger>
                 </TooltipTrigger>
@@ -162,28 +191,13 @@ export function TicketComment({
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => onDelete?.(comment)}>
+                  <AlertDialogCancel className="border-0">Cancel</AlertDialogCancel>
+                  <AlertDialogAction variant="destructive" onClick={() => onDelete?.(comment)}>
                     Continue
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          )}
-          {comment.author.id === user?.id && !comment.deleted && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="destructive"
-                  size="icon-sm"
-                  className="opacity-0 group-hover:opacity-100 transition-opacity bg-sky-700/20! text-sky-700"
-                  onClick={toggleEdit}
-                >
-                  <SquarePen />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Edit comment</TooltipContent>
-            </Tooltip>
           )}
         </div>
       </div>
