@@ -15,7 +15,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { UserAvatar } from "@/components/user-avatar";
+import { UserAvatar } from "@/features/user/components/user-avatar";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { ChevronsDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";

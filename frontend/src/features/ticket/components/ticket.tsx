@@ -12,7 +12,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import type { TicketResponseDTO } from "@shared/dtos";
 import { CalendarIcon, MessageSquareIcon, ClockIcon, } from "lucide-react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { UserAvatar } from "@/components/user-avatar";
+import { UserAvatar } from "@/features/user/components/user-avatar";
 import { getRelativeTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";

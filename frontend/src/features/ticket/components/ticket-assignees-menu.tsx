@@ -23,8 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ButtonGroup } from "@/components/ui/button-group";
-import { UserAvatarGroup } from "@/components/user-avatar-group";
-import { UserAvatar } from "@/components/user-avatar";
+import { UserAvatarGroup } from "@/features/user/components/user-avatar-group";
+import { UserAvatar } from "@/features/user/components/user-avatar";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, X } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";

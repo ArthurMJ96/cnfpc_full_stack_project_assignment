@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/features/auth/hooks/useAuth'
-import { UserAvatar } from '@/components/user-avatar'
+import { UserAvatar } from '@/features/user/components/user-avatar'
 import { Button } from '@/components/ui/button'
 import { capitalizeFirstLetter } from '@/lib/utils'
 import { Role } from '@shared/enums'

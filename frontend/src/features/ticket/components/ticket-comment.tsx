@@ -15,7 +15,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { UserAvatar } from "@/components/user-avatar";
+import { UserAvatar } from "@/features/user/components/user-avatar";
 import { getRelativeTime } from "@/lib/utils";
 import { Pencil, PencilOff, X } from "lucide-react";
 import type { TicketCommentResponseDTO } from "@shared/dtos";

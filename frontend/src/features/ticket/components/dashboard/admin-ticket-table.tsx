@@ -1,7 +1,7 @@
 import { useTickets } from "@/features/ticket/hooks/useTickets";
 import { TicketStatus } from "@shared/enums";
 import { Badge } from "@/components/ui/badge";
-import { UserAvatar } from "@/components/user-avatar";
+import { UserAvatar } from "@/features/user/components/user-avatar";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
