@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { ModeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { UserMenu } from "@/features/user/components/user-menu";
 
 export function NavBar() {
-  const { isAuthenticated, isAdmin, isSupport, isAuthor, logout } = useAuth();
+  const { isAuthenticated, isAdmin, isSupport, isAuthor } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -18,20 +19,20 @@ export function NavBar() {
           {isAuthenticated && (
             <nav className="flex items-center space-x-6 text-sm font-medium">
               {isSupport && isAdmin && (
-                <Link
+                <NavLink
                   to="/support"
                   className="transition-colors hover:text-foreground/80 text-foreground/60"
                 >
                   Support Dashboard
-                </Link>
+                </NavLink>
               )}
               {isAdmin && (
-                <Link
+                <NavLink
                   to="/admin"
-                  className="transition-colors hover:text-foreground/80 text-foreground/60"
+                  className="transition-colors hover:text-foreground/80 text-foreground/60 "
                 >
                   Admin Console
-                </Link>
+                </NavLink>
               )}
             </nav>
           )}
@@ -40,12 +41,10 @@ export function NavBar() {
           <nav className="flex items-center gap-2">
             {isAuthor && (
               <Button variant="default" asChild>
-                <Link to="/ticket/create">Create Ticket</Link>
+                <NavLink to="/ticket/create">Create Ticket</NavLink>
               </Button>
             )}
-            <Button variant="ghost" onClick={logout}>
-              Logout
-            </Button>
+            <UserMenu />
             <ModeToggle />
           </nav>
         </div>

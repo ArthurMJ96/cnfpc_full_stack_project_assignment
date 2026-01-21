@@ -5,18 +5,25 @@ import { useAuth } from "../hooks/useAuth";
 const ProtectedRoute = ({
   children,
   role,
+  guestOnly = false,
 }: {
   children: React.ReactNode;
   role?: Role;
+  guestOnly?: boolean;
 }) => {
   const { isAuthenticated, isAuthor, isAdmin, isSupport } = useAuth();
 
-  if (!isAuthenticated) {
+  console.log({ isAuthenticated, isAuthor, isAdmin, isSupport });
+
+  if (!guestOnly && !isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
+  if (guestOnly && isAuthenticated) {
+    return createError("You are already logged in.");
+  }
 
-  if (role) {
+  if (isAuthenticated && role) {
     switch (role) {
       case Role.AUTHOR:
         if (!isAuthor)

@@ -8,10 +8,10 @@ import SupportPage from "@/pages/home/support-home";
 import AdminPage from "@/pages/home/admin-home";
 import CreateTicketPage from "./pages/ticket/create-ticket";
 import ErrorPage from "./pages/error";
+import TicketDetailsPage from "./pages/ticket/ticket-detail";
 import ProtectedRoute from "./features/auth/components/ProtectedRoute";
 import { MainLayout } from "./components/layout/main-layout";
 import { AuthLayout } from "./components/layout/auth-layout";
-import { TicketDetailsPage } from "./pages/ticket/ticket-detail";
 import { Role } from "@shared/enums";
 
 export function App() {
@@ -22,8 +22,8 @@ export function App() {
           <Routes>
             {/* Auth Routes (Login, Signup) */}
             <Route element={<AuthLayout />}>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/login" element={<ProtectedRoute guestOnly><LoginPage /></ProtectedRoute>} />
+              <Route path="/signup" element={<ProtectedRoute guestOnly><SignupPage /></ProtectedRoute>} />
             </Route>
 
             {/* Main App Routes */}

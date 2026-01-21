@@ -29,7 +29,6 @@ export default function LoginPage() {
         setErrors({ message: "Unexpected error occurred during login." });
         return;
       }
-      console.log(res);
       login(res, res.token);
     } catch (error: ErrorWithCause | unknown) {
       setErrors(error as ErrorWithCause);

@@ -150,3 +150,10 @@
 .animate-flash-muted {
   animation: flash-muted 1s ease-in-out 2;
 }
+nav .active:not([data-slot="button"]) {
+  @apply font-bold text-foreground; /* Just a weight and slight color shift */
+}
+
+nav .active[data-slot="button"] {
+  @apply font-semibold bg-foreground text-background;
+}

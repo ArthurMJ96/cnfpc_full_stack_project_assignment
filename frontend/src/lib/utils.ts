@@ -22,10 +22,26 @@ export function getRelativeTime(date: number) {
 
   for (const { unit, seconds } of units) {
     if (Math.abs(diffInSeconds) >= seconds || unit === "second") {
+      const value = Math.round(diffInSeconds / seconds);
+      if (unit === "day" && value === -1) {
+        // Special case for "yesterday" => "yesterday at HH:MM AM/PM"
+        const timeStr = new Date(date).toLocaleTimeString("en", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        });
+        return `yesterday at ${timeStr}`;
+      }
+
       return new Intl.RelativeTimeFormat("en", { numeric: "auto" }).format(
-        Math.round(diffInSeconds / seconds),
+        value,
         unit,
       );
     }
   }
+}
+
+
+export function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
