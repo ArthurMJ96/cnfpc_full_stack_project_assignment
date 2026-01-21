@@ -1,46 +1,55 @@
-import { Link } from "react-router-dom"
-import { ModeToggle } from "@/components/theme-toggle"
-import { Button } from "../ui/button"
+import { Link } from "react-router-dom";
+import { ModeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export function NavBar() {
-    return (
+  const { isAuthenticated, isAdmin, isSupport, isAuthor, logout } = useAuth();
 
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-            <div className="container flex h-14 items-center mx-auto">
-                <div className="mr-4 hidden md:flex">
-                    <Link className="mr-6 flex items-center space-x-2" to="/">
-                        <span className="hidden font-bold sm:inline-block">
-                            Service Desk
-                        </span>
-                    </Link>
-                    <nav className="flex items-center space-x-6 text-sm font-medium">
-                        <Link
-                            className="transition-colors hover:text-foreground/80 text-foreground/60"
-                            to="#/tickets"
-                        >
-                            Tickets
-                        </Link>
-                        <Link
-                            className="transition-colors hover:text-foreground/80 text-foreground/60"
-                            to="#/users"
-                        >
-                            Users
-                        </Link>
-                    </nav>
-                </div>
-                <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-                    <div className="w-full flex-1 md:w-auto md:flex-none">
-                        {/* <CommandMenu /> */}
-
-                    </div>
-                    <nav className="flex items-center gap-2">
-                        <Button variant="link" asChild>
-                            <Link to="/login">Login</Link>
-                        </Button>
-                        <ModeToggle />
-                    </nav>
-                </div>
-            </div>
-        </header>
-    )
+  return (
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+      <div className="container flex h-14 items-center mx-auto">
+        <div className="mr-8 hidden md:flex">
+          <Link className="mr-6 flex items-center space-x-2" to="/">
+            <span className="hidden font-bold sm:inline-block">
+              Service Desk
+            </span>
+          </Link>
+          {isAuthenticated && (
+            <nav className="flex items-center space-x-6 text-sm font-medium">
+              {isSupport && isAdmin && (
+                <Link
+                  to="/support"
+                  className="transition-colors hover:text-foreground/80 text-foreground/60"
+                >
+                  Support Dashboard
+                </Link>
+              )}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="transition-colors hover:text-foreground/80 text-foreground/60"
+                >
+                  Admin Console
+                </Link>
+              )}
+            </nav>
+          )}
+        </div>
+        <div className="flex flex-1 items-center justify-end space-x-2">
+          <nav className="flex items-center gap-2">
+            {isAuthor && (
+              <Button variant="default" asChild>
+                <Link to="/ticket/create">Create Ticket</Link>
+              </Button>
+            )}
+            <Button variant="ghost" onClick={logout}>
+              Logout
+            </Button>
+            <ModeToggle />
+          </nav>
+        </div>
+      </div>
+    </header>
+  );
 }
