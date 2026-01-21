@@ -1,12 +1,11 @@
 import { useTickets } from "@/features/ticket/hooks/useTickets";
-import { TicketStatus } from "@shared/enums";
-import { Badge } from "@/components/ui/badge";
 import { UserAvatar } from "@/features/user/components/user-avatar";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { TicketPriorityBadge } from "../ticket-priority-badge";
 import { TicketAssigneesMenu } from "../ticket-assignees-menu";
+import { TicketStatusBadge } from "../ticket-status-badge";
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils";
 
@@ -62,16 +61,7 @@ export function AdminTicketTable({ className }: { className?: string }) {
                                 >
                                     <td className="p-3 font-mono text-xs">#{ticket.id}</td>
                                     <td className="p-3">
-                                        <Badge
-                                            variant={
-                                                ticket.status === TicketStatus.OPEN
-                                                    ? "default"
-                                                    : "outline"
-                                            }
-                                            className="text-xs"
-                                        >
-                                            {ticket.status}
-                                        </Badge>
+                                        <TicketStatusBadge ticket={ticket} />
                                     </td>
                                     <td className="p-3">
                                         <TicketPriorityBadge ticket={ticket} side="right" />

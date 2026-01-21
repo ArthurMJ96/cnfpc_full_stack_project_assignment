@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { TicketPriorityBadge } from "./ticket-priority-badge";
 import { TicketAssigneesMenu } from "./ticket-assignees-menu";
+import { TicketStatusBadge } from "./ticket-status-badge";
 
 
 export function Ticket({ ticket, ...props }: React.ComponentProps<"div"> & { ticket: TicketResponseDTO; }) {
@@ -74,10 +75,7 @@ export function Ticket({ ticket, ...props }: React.ComponentProps<"div"> & { tic
 
             <CardFooter className="border-t bg-muted/5 pt-3 mt-auto gap-4">
                 <div className="flex items-center gap-3 w-full">
-                    <Badge variant="outline" className="font-semibold px-1.5">
-                        <span className="sr-only">Status:</span>
-                        {ticket.status.replace("_", " ")}
-                    </Badge>
+                    <TicketStatusBadge ticket={ticket} />
                     <div className="flex items-center gap-1 text-muted-foreground ml-1">
                         <Button variant="ghost" className="rounded-full" asChild>
                             <Link to={`/ticket/${ticket.id}`}>

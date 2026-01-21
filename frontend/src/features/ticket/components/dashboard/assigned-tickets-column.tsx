@@ -53,7 +53,7 @@ export function AssignedTicketsColumn({ className }: { className?: string }) {
             </div>
 
             <ScrollArea className="rounded-md h-px border bg-card flex-1">
-                <div className="flex flex-col gap-6 p-4">
+                <div className="flex flex-col gap-6 justify-around p-3">
                     {
                         loading ? (
                             // Loading skeletons

@@ -12,7 +12,7 @@ export default function Home() {
   if (isAdmin) {
     if (isSupport) {
       return (
-        <div className="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-6 justify-start">
+        <div className="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-[26rem_1fr] gap-6">
           <div className="sticky top-18 h-[calc(100vh-8rem)]">
             <AssignedTicketsColumn />
           </div>

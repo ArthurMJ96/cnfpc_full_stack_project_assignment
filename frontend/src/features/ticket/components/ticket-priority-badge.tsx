@@ -1,7 +1,8 @@
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import type { TicketResponseDTO } from '@shared/dtos';
 import { TicketPriority } from '@shared/enums';
+import { Sparkle } from "lucide-react";
+import type { TicketResponseDTO } from '@shared/dtos';
 
 const priorityColor = {
     [TicketPriority.LOW]: "text-green-600! bg-green-600/10!",
@@ -11,7 +12,6 @@ const priorityColor = {
 } as const;
 
 export function TicketPriorityBadge({ ticket, side = "left" }: { ticket: TicketResponseDTO, side?: React.ComponentProps<typeof TooltipContent>["side"] }) {
-
     return (
         <Tooltip>
             <TooltipTrigger asChild>
@@ -25,9 +25,14 @@ export function TicketPriorityBadge({ ticket, side = "left" }: { ticket: TicketR
                     {ticket.priority}
                 </Badge>
             </TooltipTrigger>
-            <TooltipContent align="center" side={side} className='text-center'>
-                <p>Priority Status</p>
-                {ticket.sentiment && <p>Detected sentiment: {ticket.sentiment}</p>}
+            <TooltipContent align="center" side={side} className='text-center flex flex-col gap-1'>
+                <div>Priority Status</div>
+                {ticket.sentiment && (
+                    <div className='flex items-center justify-center gap-1'>
+                        <Sparkle className='size-3.5 inline-block align-middle' fill='currentColor' />
+                        <div className='leading-0'>Detected sentiment: {ticket.sentiment}</div>
+                    </div>
+                )}
             </TooltipContent>
         </Tooltip>
     )
