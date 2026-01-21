@@ -1,26 +1,38 @@
 import { useTickets } from "@/features/ticket/hooks/useTickets";
 import { TicketStatus } from "@shared/enums";
 import { Badge } from "@/components/ui/badge";
-import { Spinner } from "@/components/ui/spinner";
 import { UserAvatar } from "@/components/user-avatar";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { UserAvatarGroup } from "@/components/user-avatar-group";
 import { TicketPriorityBadge } from "../ticket-priority-badge";
+import { TicketAssigneesMenu } from "../ticket-assignees-menu";
+import { Skeleton } from "@/components/ui/skeleton"
+import { cn } from "@/lib/utils";
 
 export function AdminTicketTable({ className }: { className?: string }) {
     const { tickets, loading } = useTickets();
 
     if (loading)
-        return (
-            <div className="flex justify-center p-4">
-                <Spinner />
+    return (
+        <div className={cn('h-full w-full flex flex-col gap-4', className)}>
+            <div className="flex items-center justify-between p-2 rounded-md bg-background/50 backdrop-blur-sm">
+                <h2 className="text-lg font-bold">All Tickets Overview</h2>
             </div>
-        );
+            <div className="relative flex flex-col gap-4 after:contents before:absolute before:inset-0 before:bg-linear-to-b before:from-transparent before:via-background before:to-background before:z-10">
+                {Array.from({ length: 16 }).map((_, index) => (
+                    <div className="flex gap-4" key={index}>
+                        <Skeleton className="h-10 flex-1" />
+                        <Skeleton className="h-10 w-24" />
+                        <Skeleton className="h-10 w-20" />
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 
     return (
-        <div className={`h-full w-full flex flex-col space-y-4 ${className}`}>
+        <div className={`h-full w-full flex flex-col gap-4 ${className}`}>
             <div className="flex items-center justify-between p-2 rounded-md bg-background/50 backdrop-blur-sm">
                 <h2 className="text-lg font-bold">All Tickets Overview</h2>
                 <div className="text-sm text-muted-foreground">
@@ -79,8 +91,8 @@ export function AdminTicketTable({ className }: { className?: string }) {
                                         </div>
                                     </td>
                                     <td className="p-3">
-                                        <div className="flex -space-x-2">
-                                            <UserAvatarGroup users={ticket.assignedTo} />
+                                        <div className="flex justify-end">
+                                            <TicketAssigneesMenu ticket={ticket} />
                                         </div>
                                     </td>
                                     <td className="p-3 text-xs text-muted-foreground">

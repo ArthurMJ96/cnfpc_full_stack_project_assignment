@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { useTickets } from "@/features/ticket/hooks/useTickets";
 import { useCreateTicket } from "@/features/ticket/hooks/useTicketActions";
-import { Ticket } from "@/features/ticket/components/ticket";
 import {
   Card,
   CardHeader,
@@ -45,86 +43,82 @@ export function TicketForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = {
+    await createTicket({
       title,
       description,
       authorId: user!.id,
       ...(withDueDate ? { dueAt: new Date(dueAt) } : {}),
-    } as CreateTicketRequestDTO;
-    console.log(data);
-    await createTicket(data);
+    } as CreateTicketRequestDTO);
   };
 
   return (
-    <div className="container max-w-2xl mx-auto p-4 space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Create New Ticket</CardTitle>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            {ticketCreationError && <ErrorAlert error={ticketCreationError} />}
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="title">Title</FieldLabel>
-                <Input
-                  id="title"
-                  name="title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Ticket title"
-                  required
+    <Card>
+      <CardHeader>
+        <CardTitle>Create New Ticket</CardTitle>
+      </CardHeader>
+      <form onSubmit={handleSubmit}>
+        <CardContent className="space-y-4">
+          {ticketCreationError && <ErrorAlert error={ticketCreationError} />}
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="title">Title</FieldLabel>
+              <Input
+                id="title"
+                name="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Ticket title"
+                required
+              />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="description">Description</FieldLabel>
+              <Textarea
+                id="description"
+                name="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe the issue..."
+                required
+              />
+            </Field>
+            <Field>
+              <Field orientation="horizontal">
+                <Checkbox
+                  id="terms-checkbox"
+                  name="withDueDate"
+                  checked={withDueDate}
+                  onCheckedChange={(c) => setWithDueDate(!!c)}
                 />
+                <FieldLabel htmlFor="terms-checkbox">
+                  With Due Date
+                </FieldLabel>
               </Field>
-              <Field>
-                <FieldLabel htmlFor="description">Description</FieldLabel>
-                <Textarea
-                  id="description"
-                  name="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Describe the issue..."
-                  required
-                />
-              </Field>
-              <Field>
-                <Field orientation="horizontal">
-                  <Checkbox
-                    id="terms-checkbox"
-                    name="withDueDate"
-                    checked={withDueDate}
-                    onCheckedChange={(c) => setWithDueDate(!!c)}
-                  />
-                  <FieldLabel htmlFor="terms-checkbox">
-                    With Due Date
-                  </FieldLabel>
-                </Field>
-                <Input
-                  id="dueAt"
-                  name="dueAt"
-                  disabled={!withDueDate}
-                  type="datetime-local"
-                  value={dueAt}
-                  onChange={(e) => setDueAt(e.target.value)}
-                  required={withDueDate}
-                />
-              </Field>
-            </FieldGroup>
-          </CardContent>
-          <CardFooter className="mt-5">
-            <Button
-              type="submit"
-              disabled={ticketCreationLoading}
-              className="w-full"
-            >
-              {ticketCreationLoading ? (
-                <Spinner className="mr-2 h-4 w-4" />
-              ) : null}
-              Create Ticket
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
-    </div>
+              <Input
+                id="dueAt"
+                name="dueAt"
+                disabled={!withDueDate}
+                type="datetime-local"
+                value={dueAt}
+                onChange={(e) => setDueAt(e.target.value)}
+                required={withDueDate}
+              />
+            </Field>
+          </FieldGroup>
+        </CardContent>
+        <CardFooter className="mt-5">
+          <Button
+            type="submit"
+            disabled={ticketCreationLoading}
+            className="w-full"
+          >
+            {ticketCreationLoading ? (
+              <Spinner className="mr-2 h-4 w-4" />
+            ) : null}
+            Create Ticket
+          </Button>
+        </CardFooter>
+      </form>
+    </Card>
   );
 }

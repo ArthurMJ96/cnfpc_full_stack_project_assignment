@@ -9,8 +9,8 @@ import {
     SelectContent,
     SelectItem,
 } from "@/components/ui/select";
-import { Spinner } from "@/components/ui/spinner";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type SortByOption = "status" | "due" | "updated";
 
@@ -32,12 +32,6 @@ export function AssignedTicketsColumn({ className }: { className?: string }) {
         return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
     });
 
-    if (loading)
-        return (
-            <div className="flex justify-center p-4">
-                <Spinner />
-            </div>
-        );
 
     return (
         <div className={`flex flex-col gap-4 h-full ${className}`}>
@@ -57,47 +51,36 @@ export function AssignedTicketsColumn({ className }: { className?: string }) {
                     </SelectContent>
                 </Select>
             </div>
+
             <ScrollArea className="rounded-md h-px border bg-card flex-1">
                 <div className="flex flex-col gap-6 p-4">
-                    {sortedMyTickets.length === 0 && (
-                        <div className="text-sm text-muted-foreground p-4 text-center border border-dashed rounded-lg">
-                            No tickets assigned to you.
-                        </div>
-                    )}
-                    {sortedMyTickets.map((ticket) => (
-                        <div
-                            key={ticket.id}
-                            className="scale-95 origin-top-left w-[105%] -mb-2"
-                        >
-                            <Ticket ticket={ticket} />
-                        </div>
-                    ))}
-
-                    {sortedMyTickets.map((ticket) => (
-                        <div
-                            key={ticket.id}
-                            className="scale-95 origin-top-left w-[105%] -mb-2"
-                        >
-                            <Ticket ticket={ticket} />
-                        </div>
-                    ))}
-                    {sortedMyTickets.map((ticket) => (
-                        <div
-                            key={ticket.id}
-                            className="scale-95 origin-top-left w-[105%] -mb-2"
-                        >
-                            <Ticket ticket={ticket} />
-                        </div>
-                    ))}
-                    {sortedMyTickets.map((ticket) => (
-                        <div
-                            key={ticket.id}
-                            className="scale-95 origin-top-left w-[105%] -mb-2"
-                        >
-                            <Ticket ticket={ticket} />
-                        </div>
-                    ))}
+                    {
+                        loading ? (
+                            // Loading skeletons
+                            <div className="relative flex flex-col gap-4 after:contents before:absolute before:inset-0 before:bg-linear-to-b before:from-transparent before:to-card before:z-10">
+                                {Array.from({ length: 4 }).map((_, index) => (
+                                    <div className="flex gap-4" key={index}>
+                                        <Skeleton className="h-48 flex-1" />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : sortedMyTickets.length === 0 ? (
+                            // No tickets message
+                            <div className="text-sm text-muted-foreground p-4 text-center border border-dashed rounded-lg">
+                                No tickets assigned to you.
+                            </div>
+                        ) : (sortedMyTickets.map((ticket) => (
+                            // Ticket Cards
+                            <div
+                                key={ticket.id}
+                                className="scale-95 origin-top-left w-[105%] -mb-2"
+                            >
+                                <Ticket ticket={ticket} />
+                            </div>
+                        )))
+                    }
                 </div>
+
             </ScrollArea>
         </div>
     );

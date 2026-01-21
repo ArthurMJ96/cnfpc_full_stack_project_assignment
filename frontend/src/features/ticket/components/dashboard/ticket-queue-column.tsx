@@ -3,8 +3,7 @@ import { useTickets } from '@/features/ticket/hooks/useTickets';
 import { Ticket } from '@/features/ticket/components/ticket';
 import { Button } from '@/components/ui/button';
 import { TicketStatus } from '@shared/enums';
-import { Spinner } from '@/components/ui/spinner';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function TicketQueueColumn() {
   const { tickets, loading } = useTickets();
@@ -22,8 +21,6 @@ export function TicketQueueColumn() {
   ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const displayTickets = activeTab === 'unassigned' ? unassignedTickets : newTickets;
-
-  if (loading) return <div className="flex justify-center p-4"><Spinner /></div>;
 
   return (
     <div className="flex flex-col gap-4 h-full">
@@ -46,14 +43,27 @@ export function TicketQueueColumn() {
         </Button>
       </div>
       <div className="flex flex-col gap-6">
-        {displayTickets.length === 0 && (
-          <div className="text-sm text-muted-foreground p-4 text-center border border-dashed rounded-lg">
-            No tickets in this queue.
-          </div>
-        )}
-        {displayTickets.map(ticket => (
-          <Ticket key={ticket.id} ticket={ticket} />
-        ))}
+
+        {
+          loading ? (
+            // Loading skeletons
+            <div className="relative flex flex-col gap-4 after:contents before:absolute before:inset-0 before:bg-linear-to-b before:from-transparent before:to-background before:z-10">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div className="flex gap-4" key={index}>
+                  <Skeleton className="h-48 flex-1" />
+                </div>
+              ))}
+            </div>
+          ) : displayTickets.length === 0 ? (
+            // No tickets message
+            <div className="text-sm text-muted-foreground p-4 text-center border border-dashed rounded-lg">
+              No tickets in this queue.
+            </div>
+          ) : (displayTickets.map((ticket) => (
+            // Ticket Cards
+            <Ticket key={ticket.id} ticket={ticket} />
+          )))
+        }
       </div>
     </div>
   );
