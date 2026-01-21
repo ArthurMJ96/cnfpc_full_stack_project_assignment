@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.user.CreateUserRequestDTO;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.user.UpdatePasswordRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.user.UpdateUserRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.UserResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role;
@@ -39,6 +40,12 @@ public class UserService {
         return UserMapper.toResponseList(userRepository.findByRoles(Role.SUPPORT));
     }
 
+    /**
+     * Updates an existing user's profile. <br>
+     * A user can only update their own profile, unless the requester is an
+     * ADMIN. <br>
+     * Only an ADMIN can update sensitive fields like 'roles' and 'jobTitle'.
+     */
     public UserResponseDTO update(UpdateUserRequestDTO dto) {
         // Must be the user himself or an ADMIN to update the user
         if (!UserPrincipal.getCurrentUserId().equals(dto.getId()) && !UserPrincipal.isAdmin()) {
@@ -73,6 +80,10 @@ public class UserService {
         return UserMapper.toResponse(userRepository.save(user));
     }
 
+    /**
+     * Creates a new user. <br>
+     * Only an ADMIN can create new users.
+     */
     public UserResponseDTO create(CreateUserRequestDTO dto) {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new DuplicateResourceException("User", "Email", dto.getEmail());
@@ -85,5 +96,26 @@ public class UserService {
         User user = UserMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         return UserMapper.toResponse(userRepository.save(user));
+    }
+
+    public void updatePassword(UpdatePasswordRequestDTO dto) {
+        // Must be the user himself
+        if (!UserPrincipal.getCurrentUserId().equals(dto.getId())) {
+            throw new ForbiddenException(UserPrincipal.getCurrentUserId(), "update this user's password");
+        }
+
+        User user = userRepository.findById(dto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", dto.getId()));
+
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Current password does not match");
+        }
+
+        if (!dto.getNewPassword().equals(dto.getNewPasswordConfirm())) {
+            throw new IllegalArgumentException("New passwords do not match");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        userRepository.save(user);
     }
 }
