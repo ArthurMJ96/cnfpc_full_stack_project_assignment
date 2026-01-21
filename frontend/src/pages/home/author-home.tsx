@@ -110,7 +110,7 @@ export default function Home() {
                     </div>
                 ) : myTickets.length > 0 ? (
                     myTickets.map((ticket) => (
-                        <Ticket key={ticket.id} ticket={ticket} onClick={() => navigate(`/ticket/${ticket.id}`)} />
+                        <Ticket key={ticket.id} ticket={ticket} />
                     ))
                 ) : (
                     <div className="text-center text-muted-foreground p-8 border rounded-lg border-dashed">
