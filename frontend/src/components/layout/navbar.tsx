@@ -1,5 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { UserMenu } from "@/features/user/components/user-menu";
 import {
@@ -12,7 +11,7 @@ import {
 import { ChevronDown } from "lucide-react";
 
 export function NavBar() {
-  const { isAdmin, isSupport, isAuthor } = useAuth();
+  const { isAdmin, isSupport } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
