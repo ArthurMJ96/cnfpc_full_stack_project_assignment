@@ -3,7 +3,7 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import { userApi } from "@/features/user/api";
 import type { UserResponseDTO, UpdateUserRequestDTO } from "@shared/dtos";
 import { Role } from "@shared/enums";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { Spinner } from "@/components/ui/spinner";
 import { ErrorAlert } from "@/components/error-alert";
 import { SuccessAlert } from "@/components/sucess-alert";
@@ -31,7 +31,7 @@ export default function AdminUserDetailsPage() {
 
     const [user, setUser] = useState<UserResponseDTO>();
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<Error | undefined | unknown>();
+    const [error, setError] = useState<Error | undefined>();
     const [profileSuccess, setProfileSuccess] = useState<string>();
 
     useEffect(() => {
@@ -49,7 +49,7 @@ export default function AdminUserDetailsPage() {
                 const userData = await userApi.getById(userId);
                 setUser(userData);
             } catch (err: unknown) {
-                setError(err);
+                setError(err as Error);
             } finally {
                 setLoading(false);
             }
@@ -59,8 +59,7 @@ export default function AdminUserDetailsPage() {
     }, [isAdmin, userId, navigate]);
 
     if (loading) return <div className="flex justify-center p-8"><Spinner /></div>;
-    if (error) return <ErrorAlert error={error} />;
-    if (!user) return <div className="p-8">User not found</div>;
+    if (!user) return <Navigate to="/error" replace state={{ error: { message: `User #${userId} not found` } }} />;
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -94,7 +93,7 @@ export default function AdminUserDetailsPage() {
             setUser(updated);
             setProfileSuccess("User updated successfully");
         } catch (err: unknown) {
-            setError(err);
+            setError(err as Error);
         }
     };
 
@@ -127,6 +126,7 @@ export default function AdminUserDetailsPage() {
 
             {/* FORM */}
             <div>
+                {error && <ErrorAlert error={error} />}
                 {profileSuccess && <SuccessAlert message={profileSuccess} className="mb-4" />}
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-2 gap-6">

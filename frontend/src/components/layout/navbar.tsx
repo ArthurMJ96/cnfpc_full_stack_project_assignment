@@ -53,7 +53,7 @@ export function NavBar() {
           )}
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <nav className="flex items-center gap-2">
+          <nav className="flex items-center gap-2 pr-1">
             <UserMenu />
           </nav>
         </div>

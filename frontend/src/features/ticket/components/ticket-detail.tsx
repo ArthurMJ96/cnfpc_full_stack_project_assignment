@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useTicket } from "@/features/ticket/hooks/useTicket";
 import {
   useAddComment,
@@ -89,7 +89,7 @@ export function TicketDetails({ ticketId }: { ticketId: number }) {
       <Skeleton className="h-52 w-full" />
     </div>
   );
-  if (!ticket) return <div>Ticket #{ticketId} Not found</div>;
+  if (!ticket) return <Navigate to="/error" replace state={{ error: { message: `Ticket #${ticketId} not found` } }} />;
 
   const scrollToBottom = () => {
     anchor.current?.scrollIntoView({ behavior: "smooth", block: "center" });
