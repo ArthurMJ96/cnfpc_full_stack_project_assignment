@@ -23,6 +23,7 @@ import { useRef, useState } from "react";
 import { TextareaSubmit } from "@/components/textarea-submit";
 import { ErrorAlert } from "@/components/error-alert";
 import { TicketComment } from "@/features/ticket/components/ticket-comment";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function TicketDetails({ ticketId }: { ticketId: number }) {
   const { user, isAdmin } = useAuth();
@@ -83,7 +84,11 @@ export function TicketDetails({ ticketId }: { ticketId: number }) {
     setMaxInitialId(max);
   }
 
-  if (!ticket && loading) return <div>Loading...</div>;
+  if (!ticket && loading) return (
+    <div className="max-w-4xl mx-auto pt-10 flex justify-around gap-4 pb-50 px-4">
+      <Skeleton className="h-52 w-full" />
+    </div>
+  );
   if (!ticket) return <div>Ticket #{ticketId} Not found</div>;
 
   const scrollToBottom = () => {
@@ -184,7 +189,7 @@ export function TicketDetails({ ticketId }: { ticketId: number }) {
                         {user.firstname} {user.lastname}
                       </h3>
                       <TextareaSubmit
-                        className="w-full"
+                        className={"w-full" + (addCommentLoading ? " bg-muted rounded-md animate-pulse" : "")}
                         value={commentText}
                         onChange={(e) => setCommentText(e.target.value)}
                         name="comment"

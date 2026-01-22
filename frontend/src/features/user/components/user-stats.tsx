@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { userApi } from "@/features/user/api";
 import type { UserStatsResponseDTO } from "@shared/dtos";
-import { Spinner } from "@/components/ui/spinner";
 import { ErrorAlert } from "@/components/error-alert";
 import { StatisticsCard } from "@/components/statistics-card";
 import { Briefcase, CheckCircle2, MessageSquare, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function UserStats({ userId, className, ...props }: { userId: number } & React.ComponentProps<'div'>) {
 
@@ -33,7 +33,14 @@ export default function UserStats({ userId, className, ...props }: { userId: num
         fetchData();
     }, [userId]);
 
-    if (!stats || loading) return <div className="flex justify-center p-8"><Spinner /></div>;
+
+
+    if (!stats || loading) return (<div className={cn("grid grid-cols-2 md:grid-cols-4 gap-4", className)} {...props}>
+        <Skeleton className="h-24 rounded-md animate-pulse" />
+        <Skeleton className="h-24 rounded-md animate-pulse" />
+        <Skeleton className="h-24 rounded-md animate-pulse" />
+        <Skeleton className="h-24 rounded-md animate-pulse" />
+    </div>);
 
     if (error) return <ErrorAlert error={error} className="m-4" />;
 
