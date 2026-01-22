@@ -18,9 +18,11 @@ import {
 import { UserAvatar } from "@/features/user/components/user-avatar";
 import { getRelativeTime } from "@/lib/utils";
 import { Pencil, PencilOff, X } from "lucide-react";
+import { TicketCommentType } from "@shared/enums";
 import type { TicketCommentResponseDTO } from "@shared/dtos";
 import { TextareaButton, TextareaSubmit } from "@/components/textarea-submit";
 import { useState } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function TicketComment({
   comment,
@@ -73,82 +75,57 @@ export function TicketComment({
           />
 
           {/* Comment Details */}
-          <h3 className="mt-8 font-semibold tracking-[-0.01em] text-sm">
-            {comment.author.firstname} {comment.author.lastname}
-            <span className="select-none text-xs text-muted-foreground font-normal tracking-[-0.01em]">{` • ${comment.author.jobTitle}`}</span>
-          </h3>
-          <h3 className=" text-xs text-muted-foreground font-normal tracking-[-0.01em]">
-            <Tooltip>
-              <TooltipTrigger>
-                {getRelativeTime(new Date(comment.updatedAt).getTime())}
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <div className="flex flex-col">
-                  {comment.edited ? (
-                    <>
-                      <span>
-                        Created:{" "}
-                        {new Date(comment.createdAt).toLocaleString(undefined, {
-                          dateStyle: "medium",
-                          timeStyle: "short",
-                        })}
-                      </span>
-                      <span>
-                        Updated:{" "}
-                        {new Date(comment.updatedAt).toLocaleString(undefined, {
-                          dateStyle: "medium",
-                          timeStyle: "short",
-                        })}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <span>
-                        {new Date(comment.createdAt).toLocaleString(undefined, {
-                          dateStyle: "medium",
-                          timeStyle: "short",
-                        })}
-                      </span>
-                    </>
-                  )}
-                </div>
-              </TooltipContent>
-            </Tooltip>
-            {comment.edited && (
-              <span className="italic text-muted-foreground"> (edited)</span>
-            )}
-          </h3>
-
-          {/* Comment Content or Edit Form */}
-          {!comment.deleted && isEditing ? (
-            <form onSubmit={handleSubmit}>
-              <TextareaSubmit
-                className="w-full"
-                textareaClassName="min-h-4"
-                value={editedContent}
-                onChange={(e) => setEditedContent(e.target.value)}
-                onEnterPress={handleSubmit}
-                name="commentEdit"
-              >
-                <TextareaButton
-                  variant="outline"
-                  type="button"
-                  size="sm"
-                  onClick={toggleEdit}
-                >
-                  Cancel
-                </TextareaButton>
-              </TextareaSubmit>
-            </form>
+          {comment.type === TicketCommentType.UPDATE ? (
+            // Render as Update Comment
+            <h3 className="mt-8 font-semibold tracking-[-0.01em] text-sm flex items-center gap-2 align-center">
+              {comment.author.firstname} {comment.author.lastname}
+              <span className="select-none text-xs text-muted-foreground font-normal! tracking-[-0.01em]">
+                {` • `}
+                <BoldRenderer text={comment.content} />
+                {` • `}<span><TimeStamp comment={comment} /></span>
+              </span>
+            </h3>
           ) : (
-            <p className="text-sm sm:text-base text-muted-foreground pl-0 pr-1">
-              {comment.content}
-            </p>
-          )}
-        </div>
-        <div className="absolute bottom-2 right-2 text-xs w-24 flex justify-end gap-1">
+            // Render as Standard Comment
+            <>
+              <h3 className="mt-8 font-semibold tracking-[-0.01em] text-sm">
+                {comment.author.firstname} {comment.author.lastname}
+                <span className="select-none text-xs text-muted-foreground font-normal tracking-[-0.01em]">{` • ${comment.author.jobTitle}`}</span>
+              </h3>
+              <h3 className="text-xs text-muted-foreground font-normal tracking-[-0.01em]">
+                <TimeStamp comment={comment} />
+              </h3>
 
-          {comment.author.id === user?.id && !comment.deleted && (
+              {/* Comment Content or Edit Form */}
+              {!comment.deleted && isEditing ? (
+                <form onSubmit={handleSubmit}>
+                  <TextareaSubmit
+                    className="w-full"
+                    textareaClassName="min-h-4"
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    onEnterPress={handleSubmit}
+                    name="commentEdit"
+                  >
+                    <TextareaButton
+                      variant="outline"
+                      type="button"
+                      size="sm"
+                      onClick={toggleEdit}
+                    >
+                      Cancel
+                    </TextareaButton>
+                  </TextareaSubmit>
+                </form>
+              ) : (
+                <div className="text-sm sm:text-base text-muted-foreground pl-0 pr-1 whitespace-pre-wrap">
+                  <CommentRenderer text={comment.content} />
+                </div>
+              )}</>)}
+        </div>
+
+        <div className="absolute bottom-2 right-2 text-xs w-24 flex justify-end gap-1">
+          {comment.type !== TicketCommentType.UPDATE && comment.author.id === user?.id && !comment.deleted && (
             // Edit Button
             <Tooltip>
               <TooltipTrigger asChild>
@@ -165,7 +142,7 @@ export function TicketComment({
             </Tooltip>
           )}
 
-          {(isAdmin || comment.author.id === user?.id) && !comment.deleted && (
+          {(isAdmin || (comment.type !== TicketCommentType.UPDATE && comment.author.id === user?.id)) && !comment.deleted && (
             // Delete Button with Confirmation Dialog
             <AlertDialog>
               <Tooltip>
@@ -204,3 +181,103 @@ export function TicketComment({
     </div>
   );
 }
+
+const TimeStamp = ({ comment }: { comment: TicketCommentResponseDTO }) => {
+  return (
+    <>
+      <Tooltip>
+        <TooltipTrigger>
+          {getRelativeTime(new Date(comment.updatedAt).getTime())}
+        </TooltipTrigger>
+        <TooltipContent side="right">
+          <div className="flex flex-col">
+            {comment.edited ? (
+              <>
+                <span>
+                  Created:{" "}
+                  {new Date(comment.createdAt).toLocaleString(undefined, {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </span>
+                <span>
+                  Updated:{" "}
+                  {new Date(comment.updatedAt).toLocaleString(undefined, {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </span>
+              </>
+            ) : (
+              <>
+                <span>
+                  {new Date(comment.createdAt).toLocaleString(undefined, {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </span>
+              </>
+            )}
+          </div>
+        </TooltipContent>
+      </Tooltip>
+      {comment.edited && (
+        <span className="italic text-muted-foreground"> (edited)</span>
+      )}
+    </>
+  );
+}
+
+const BoldRenderer = ({ text }: { text: string }) => {
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      const boldContent = part.slice(2, -2);
+      return (
+        <span key={index} className="font-bold">
+          {boldContent}
+        </span>
+      );
+    }
+    return part;
+  });
+}
+
+const CommentRenderer = ({ text }: { text: string }) => {
+  const parts: string[] = text.split(/(```[\s\S]*?```)/g);
+
+  return (
+    <div className="comment-body">
+      {parts.map((part, index) => {
+        // Handle Code Blocks
+        if (part.startsWith('```') && part.endsWith('```')) {
+          const codeContent = part.slice(3, -3).trim();
+          return (
+            <ScrollArea key={index} className="bg-muted p-4 rounded-md my-2 font-mono text-sm whitespace-pre-wrap text-nowrap overflow-x-auto">
+              {codeContent}
+            </ScrollArea>
+          );
+        }
+
+        // Handle Bold Text for non-code segments
+        const subParts = part.split(/(\*\*.*?\*\*)/g);
+
+        return (
+          <span key={index}>
+            {subParts.map((subPart, subIndex) => {
+              if (subPart.startsWith('**') && subPart.endsWith('**')) {
+                const boldContent = subPart.slice(2, -2);
+                return (
+                  <span key={subIndex} className="font-bold">
+                    {boldContent}
+                  </span>
+                );
+              }
+              return subPart;
+            })}
+          </span>
+        );
+      })}
+    </div>
+  );
+};
