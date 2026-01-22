@@ -162,9 +162,9 @@ export function TicketDetails({ ticketId }: { ticketId: number }) {
               <form onSubmit={handleSubmit}>
                 <div className="group relative rounded-lg transition-all -mt-12">
                   <div className="flex flex-wrap items-start">
-                    <div className="absolute w-full -top-5 h-12 pointer-events-none bg-linear-to-b from-transparent  [@container_scroll-state(stuck:bottom)]:to-background" />
+                    <div className="absolute w-full -top-5 h-12 pointer-events-none bg-linear-to-b from-transparent stuck-bottom-to-background" />
                     <div className="absolute w-full top-6 h-full bg-background" />
-                    <div className="absolute -top-10 h-12 w-full justify-center items-center hidden [@container_scroll-state(stuck:bottom)]:flex">
+                    <div className="absolute -top-10 h-12 w-full justify-center items-center hidden stuck-bottom-flex">
                       <Button
                         variant="outline"
                         className="bg-background!"

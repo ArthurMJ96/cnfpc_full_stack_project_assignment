@@ -66,8 +66,8 @@ export function TicketComment({
           Deleted
         </div>
       )}
-      <div className="flex items-start w-full pr-24">
-        <div className="relative pb-2 border-l-2 group-last:pb-10 pl-6 sm:pl-8 space-y-2 ml-10 w-full">
+      <div className="flex items-start w-full pr-24 min-w-0">
+        <div className="relative pb-2 border-l-2 group-last:pb-10 pl-6 sm:pl-8 space-y-2 ml-10 w-full min-w-0">
           {/* User as Timeline Dot */}
           <UserAvatar
             className="absolute -translate-x-1/2 -left-px top-6"
@@ -118,7 +118,7 @@ export function TicketComment({
                   </TextareaSubmit>
                 </form>
               ) : (
-                <div className="text-sm sm:text-base text-muted-foreground pl-0 pr-1 whitespace-pre-wrap">
+                <div className="text-sm sm:text-base text-muted-foreground pl-0 pr-1 min-w-0">
                   <CommentRenderer text={comment.content} />
                 </div>
               )}</>)}
@@ -247,15 +247,19 @@ const CommentRenderer = ({ text }: { text: string }) => {
   const parts: string[] = text.split(/(```[\s\S]*?```)/g);
 
   return (
-    <div className="comment-body">
+    <div className="comment-body w-full min-w-0">
       {parts.map((part, index) => {
         // Handle Code Blocks
         if (part.startsWith('```') && part.endsWith('```')) {
           const codeContent = part.slice(3, -3).trim();
           return (
-            <ScrollArea key={index} className="bg-muted p-4 rounded-md my-2 font-mono text-sm whitespace-pre-wrap text-nowrap overflow-x-auto">
-              {codeContent}
-            </ScrollArea>
+            <div key={index} className="w-full min-w-0">
+              <ScrollArea className="bg-muted rounded-md my-2 font-mono text-sm w-full">
+                <div className="p-4 whitespace-pre">
+                  {codeContent}
+                </div>
+              </ScrollArea>
+            </div>
           );
         }
 

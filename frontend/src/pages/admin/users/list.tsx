@@ -5,7 +5,7 @@ import type { UserResponseDTO } from "@shared/dtos";
 import { Role } from "@shared/enums";
 import { useNavigate } from "react-router-dom";
 import { ErrorAlert } from "@/components/error-alert";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -95,7 +95,6 @@ export default function AdminUserListPage() {
                         )}
                     </tbody>
                 </table>
-                <ScrollBar orientation="horizontal" />
             </ScrollArea>
         </div>
     );

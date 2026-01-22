@@ -1,0 +1,18 @@
+/* Manual CSS bypasses the Tailwind compiler's strictness. Vite build tool fails at new CSS features like [@container_scroll-state(stuck:bottom)]:flex */
+.stuck-bottom-flex {
+  @container scroll-state(stuck: bottom) {
+    display: flex !important;
+  }
+}
+
+.stuck-bottom-to-background {
+  @container scroll-state(stuck: bottom) {
+    --tw-gradient-to: var(--background);
+    --tw-gradient-stops: var(
+      --tw-gradient-via-stops,
+      var(--tw-gradient-position),
+      var(--tw-gradient-from) var(--tw-gradient-from-position),
+      var(--tw-gradient-to) var(--tw-gradient-to-position)
+    );
+  }
+}

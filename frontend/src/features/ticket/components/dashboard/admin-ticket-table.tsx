@@ -1,6 +1,6 @@
 import { useTickets } from "@/features/ticket/hooks/useTickets";
 import { UserAvatar } from "@/features/user/components/user-avatar";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { TicketPriorityBadge } from "../ticket-priority-badge";
@@ -99,7 +99,6 @@ export function AdminTicketTable({ className }: { className?: string }) {
                             ))}
                         </tbody>
                     </table>
-                    <ScrollBar orientation="horizontal" />
                 </ScrollArea>
             </div>
         </div>
