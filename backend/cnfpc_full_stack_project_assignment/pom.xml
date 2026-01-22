@@ -142,7 +142,7 @@
 								<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role</class>
 								<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketCommentType</class>
 							</classes>
-							<outputFile>${project.basedir}/../../shared/enums/index.ts</outputFile>
+							<outputFile>${project.basedir}/../../frontend/shared/enums/index.ts</outputFile>
 						</configuration>
 					</execution>
 					<execution>
@@ -155,7 +155,7 @@
 							<classPatterns>
 								<pattern>lu.arthurmj.cnfpc_full_stack_project_assignment.dto.**</pattern>
 							</classPatterns>
-							<outputFile>${project.basedir}/../../shared/dtos/index.ts</outputFile>
+							<outputFile>${project.basedir}/../../frontend/shared/dtos/index.ts</outputFile>
 							<customTypeMappings>
 								<customTypeMapping>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority:TicketPriority</customTypeMapping>
 								<customTypeMapping>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketStatus:TicketStatus</customTypeMapping>

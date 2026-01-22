@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-01-22 10:01:44.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-22 14:17:31.
 
 import { TicketPriority } from '../enums';
 import { TicketStatus } from '../enums';

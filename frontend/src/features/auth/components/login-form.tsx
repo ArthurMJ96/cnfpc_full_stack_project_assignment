@@ -26,11 +26,11 @@ export function LoginForm({
                 </div>
                 <Field>
                     <FieldLabel htmlFor="email">Email</FieldLabel>
-                    <Input id="email" name="email" type="email" placeholder="m@example.com" defaultValue="admin@admin.com" required />
+                    <Input id="email" name="email" type="email" placeholder="m@example.com" required />
                 </Field>
                 <Field>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input id="password" name="password" type="password" defaultValue="admin@admin.com" required />
+                    <Input id="password" name="password" type="password" required />
                 </Field>
                 <Field>
                     <Button type="submit" disabled={loading}>
