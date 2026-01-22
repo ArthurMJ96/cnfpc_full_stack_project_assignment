@@ -1,6 +1,6 @@
 import { GalleryVerticalEnd } from "lucide-react"
 import { Link, Outlet } from "react-router-dom"
-import { ModeToggle } from "@/components/theme-toggle"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export function AuthLayout() {
     return (
@@ -15,7 +15,7 @@ export function AuthLayout() {
                     </Link>
 
                     <div className="ml-auto">
-                        <ModeToggle className="size-12" />
+                        <ThemeToggle className="size-12" />
                     </div>
                 </div>
                 <Outlet />

@@ -13,8 +13,6 @@ const ProtectedRoute = ({
 }) => {
   const { isAuthenticated, isAuthor, isAdmin, isSupport } = useAuth();
 
-  console.log({ isAuthenticated, isAuthor, isAdmin, isSupport });
-
   if (!guestOnly && !isAuthenticated) {
     return <Navigate to="/login" replace />;
   }

@@ -4,7 +4,7 @@ import { useTheme } from "@/providers/theme-provider"
 import { useCallback } from "react"
 import { cn } from "@/lib/utils"
 
-export function ModeToggle({ className }: React.ComponentProps<"span">) {
+export function ThemeToggle({ className }: React.ComponentProps<"span">) {
   const { setTheme, theme } = useTheme()
 
   const toggleTheme = useCallback(() => {
@@ -14,13 +14,12 @@ export function ModeToggle({ className }: React.ComponentProps<"span">) {
   return (
     <Button
       variant="ghost"
-      size="icon-lg"
-      className={cn("group/toggle size-8", className)}
+      className={cn("group/toggle", className)}
       onClick={toggleTheme}
     >
       <SunIcon className="hidden [html.dark_&]:block" />
       <MoonIcon className="hidden [html.light_&]:block" />
-      <span className="sr-only">Toggle theme</span>
+      <span>Toggle theme</span>
     </Button>
   )
 }

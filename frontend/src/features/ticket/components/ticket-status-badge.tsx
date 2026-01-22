@@ -31,8 +31,6 @@ export function TicketStatusBadge({ ticket, onUpdate, className, ...badgeProps }
   const { mutate, loading } = useUpdateTicket({
     onSuccess: (data) => {
       onUpdate?.(data);
-      // eslint-disable-next-line react-hooks/immutability
-      ticket.status = data.status;
     },
   });
 

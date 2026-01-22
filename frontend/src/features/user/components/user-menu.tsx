@@ -1,4 +1,5 @@
 import { LogOutIcon, UserIcon } from 'lucide-react'
+import { NavLink } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { UserAvatar } from '@/features/user/components/user-avatar'
 import { Button } from '@/components/ui/button'
@@ -32,7 +34,7 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='outline' className='py-6'>
+        <Button variant='outline' className='py-6 min-w-40 justify-start'>
           <UserAvatar user={user} />
           <div className='flex flex-col gap-1 leading-none text-start'>
             <span className='max-w-40 truncate text-sm leading-none font-semibold'>{user.firstname} {user.lastname}</span>
@@ -53,7 +55,15 @@ export function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem><UserIcon />Profile</DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <NavLink to="/profile" className="flex items-center w-full">
+              <UserIcon className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </NavLink>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <ThemeToggle className="flex justify-start w-full gap-3" />
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 
