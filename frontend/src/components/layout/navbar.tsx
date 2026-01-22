@@ -1,5 +1,4 @@
 import { Link, NavLink } from "react-router-dom";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { UserMenu } from "@/features/user/components/user-menu";

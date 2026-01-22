@@ -21,11 +21,13 @@ export function AuthLayout() {
                 <Outlet />
             </div>
             <div className="bg-muted relative hidden lg:block">
-                <img
-                    src="/placeholder.svg"
-                    alt="Image"
-                    className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-                />
+                <div className="absolute inset-0 w-full h-full grid place-items-center">
+                    <img
+                        src="/head.png"
+                        alt="Image"
+                        className=" object-contain object-center h-3/5 dark:brightness-[0.2] dark:grayscale"
+                    />
+                </div>
             </div>
         </div>
     )
