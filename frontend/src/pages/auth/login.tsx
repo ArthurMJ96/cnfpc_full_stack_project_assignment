@@ -1,17 +1,20 @@
 import { LoginForm } from "@/features/auth/components/login-form";
 import { authApi } from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { useNavigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 import { useState } from "react";
 import { ErrorAlert } from "@/components/error-alert";
 import type { LoginRequestDTO } from "@shared/dtos";
 import type { ErrorWithCause } from "@/lib/api";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<ErrorWithCause>();
-  const { login } = useAuth();
-  const nav = useNavigate();
+  const { login, isAuthenticated } = useAuth();
+  
+  if (isAuthenticated) return <Navigate to="/" replace />;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -37,7 +40,7 @@ export default function LoginPage() {
       setLoading(false);
     }
 
-    nav("/");
+    navigate("/");
   };
 
   return (

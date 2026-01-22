@@ -2,7 +2,9 @@ import { apiFetch } from "@/lib/api";
 import type {
     UserResponseDTO,
     UpdateUserRequestDTO,
-    CreateUserRequestDTO
+    CreateUserRequestDTO,
+    UpdatePasswordRequestDTO,
+    UserStatsResponseDTO
 } from "@shared/dtos";
 
 // API for user-related operations
@@ -23,5 +25,12 @@ export const userApi = {
     createUser: (data: CreateUserRequestDTO) => apiFetch<UserResponseDTO>('/users', {
         method: 'POST',
         body: JSON.stringify(data),
+    }),
+    updatePassword: (data: UpdatePasswordRequestDTO) => apiFetch<void>(`/users/${data.id}/password`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+    }),
+    getUserStats: (userId: number) => apiFetch<UserStatsResponseDTO>(`/users/${userId}/stats`, {
+        method: 'GET',
     }),
 };

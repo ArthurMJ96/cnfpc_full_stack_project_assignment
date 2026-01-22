@@ -1,10 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-01-21 20:49:35.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-22 10:01:44.
 
 import { TicketPriority } from '../enums';
 import { TicketStatus } from '../enums';
 import { Role } from '../enums';
+import { TicketCommentType } from '../enums';
 
 export interface ErrorResponseDTO {
     status: number;
@@ -90,6 +91,7 @@ export interface TicketCommentResponseDTO {
     createdAt: Date;
     updatedAt: Date;
     author: UserResponseDTO;
+    type: TicketCommentType;
 }
 
 export interface TicketResponseDTO {
@@ -114,4 +116,11 @@ export interface UserResponseDTO {
     lastname: string;
     jobTitle: string;
     roles: Role[];
+}
+
+export interface UserStatsResponseDTO {
+    assignedTickets: number;
+    resolvedAssignedTickets: number;
+    createdTickets: number;
+    totalComments: number;
 }

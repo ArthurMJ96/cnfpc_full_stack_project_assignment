@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-01-19 09:57:42.
+// Generated using typescript-generator version 3.2.1263 on 2026-01-22 10:01:40.
 
 export enum TicketPriority {
     LOW = "LOW",
@@ -20,4 +20,9 @@ export enum Role {
     ADMIN = "ADMIN",
     SUPPORT = "SUPPORT",
     AUTHOR = "AUTHOR",
+}
+
+export enum TicketCommentType {
+    COMMENT = "COMMENT",
+    UPDATE = "UPDATE",
 }
