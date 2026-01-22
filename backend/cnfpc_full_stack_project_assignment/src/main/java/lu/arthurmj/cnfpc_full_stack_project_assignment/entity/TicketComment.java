@@ -13,6 +13,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 @Entity
 @Table(name = "ticket_comments")
@@ -39,6 +41,10 @@ public class TicketComment {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TicketCommentType type = TicketCommentType.COMMENT;
 
     private boolean deleted = false;
     private boolean edited = false;
@@ -105,6 +111,14 @@ public class TicketComment {
 
     public void setEdited(boolean edited) {
         this.edited = edited;
+    }
+
+    public TicketCommentType getType() {
+        return type;
+    }
+
+    public void setType(TicketCommentType type) {
+        this.type = type;
     }
 
 }

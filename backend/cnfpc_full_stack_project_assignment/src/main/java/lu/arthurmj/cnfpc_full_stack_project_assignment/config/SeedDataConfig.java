@@ -49,7 +49,7 @@ public class SeedDataConfig {
       User sUser1 = addSupportUser("engi1@engi1.com", "engi1@engi1.com", "John", "Code", "10x Developer");
       User sUser2 = addSupportUser("engi2@engi2.com", "engi2@engi2.com", "Jane", "Doe", "Senior Developer");
       User sUser3 = addSupportUser("engi3@engi3.com", "engi3@engi3.com", "Jim", "Beam", "Junior Developer");
-      User sUser4 = addSupportUser("engi4@engi4.com", "engi4@engi4.com", "Jack", "Smith", "Noob Developer (Nepo hire)");
+      User sUser4 = addSupportUser("engi4@engi4.com", "engi4@engi4.com", "Jack", "Smith", "Nepo hire Developer");
 
       // CTO user with support and employee roles
       addUser("cto@cto.com", "cto@cto.com", "James", "Jones", "CTO", Set.of(Role.SUPPORT, Role.AUTHOR));
