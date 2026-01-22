@@ -1,4 +1,4 @@
-import { LogOutIcon, UserIcon } from 'lucide-react'
+import { LogOutIcon, SquarePen, UserIcon } from 'lucide-react'
 import { NavLink } from "react-router-dom";
 import {
   DropdownMenu,
@@ -19,7 +19,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogMedia, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 
 export function UserMenu() {
-  const { user, logout } = useAuth()
+  const { user, logout, isAuthor } = useAuth()
 
   if (!user) return (
     <Button variant='outline' className='py-6'>
@@ -61,6 +61,12 @@ export function UserMenu() {
               <span>Profile</span>
             </NavLink>
           </DropdownMenuItem>
+          {isAuthor && <DropdownMenuItem asChild>
+            <NavLink to="/ticket/create" className="flex items-center w-full">
+              <SquarePen className="mr-2 h-4 w-4" />
+              <span>Create Ticket</span>
+            </NavLink>
+          </DropdownMenuItem>}
           <DropdownMenuItem asChild>
             <ThemeToggle className="flex justify-start w-full gap-3" />
           </DropdownMenuItem>

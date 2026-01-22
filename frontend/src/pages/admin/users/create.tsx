@@ -6,7 +6,7 @@ import { Role } from "@shared/enums";
 import { useNavigate } from "react-router-dom";
 import { ErrorAlert } from "@/components/error-alert";
 import { Button } from "@/components/ui/button";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
@@ -51,9 +51,9 @@ export default function AdminUserCreatePage() {
         }
 
         const newRoles: Role[] = [];
-        if (formData.get("role_AUTHOR") === "on") newRoles.push(Role.AUTHOR);
-        if (formData.get("role_SUPPORT") === "on") newRoles.push(Role.SUPPORT);
-        if (formData.get("role_ADMIN") === "on") newRoles.push(Role.ADMIN);
+        if (formData.get("AUTHOR") === "on") newRoles.push(Role.AUTHOR);
+        if (formData.get("SUPPORT") === "on") newRoles.push(Role.SUPPORT);
+        if (formData.get("ADMIN") === "on") newRoles.push(Role.ADMIN);
 
         const createData: CreateUserRequestDTO = {
             email: formData.get("email") as string,
@@ -76,7 +76,7 @@ export default function AdminUserCreatePage() {
     };
 
     return (
-        <div className="container mx-auto py-6 space-y-8 max-w-4xl">
+        <div className="container mx-auto py-6 space-y-8 max-w-4xl px-4">
             <div className="space-y-2">
                 <Breadcrumb>
                     <BreadcrumbList>
@@ -102,7 +102,7 @@ export default function AdminUserCreatePage() {
             {!!error && <ErrorAlert error={error} />}
 
             <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols- gap-6">
                     <div className="space-y-4">
                         <h3 className="text-lg font-medium">Account Information</h3>
                         <FieldGroup>
@@ -120,7 +120,7 @@ export default function AdminUserCreatePage() {
                             </Field>
                         </FieldGroup>
                     </div>
-
+                    {/* <Separator orientation="vertical" /> */}
                     <div className="space-y-4">
                         <h3 className="text-lg font-medium">Personal Information</h3>
                         <FieldGroup>
@@ -141,21 +141,43 @@ export default function AdminUserCreatePage() {
 
                     <div className="col-span-2 space-y-4">
                         <h3 className="text-lg font-medium">Roles</h3>
-                        <div className="space-y-2 border p-4 rounded-md">
-                            <div className="flex items-center gap-2">
-                                <Checkbox id="role_AUTHOR" name="role_AUTHOR" defaultChecked />
-                                <label htmlFor="role_AUTHOR" className="text-sm font-medium leading-none cursor-pointer">Author</label>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Checkbox id="role_SUPPORT" name="role_SUPPORT" />
-                                <label htmlFor="role_SUPPORT" className="text-sm font-medium leading-none cursor-pointer">Support</label>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Checkbox id="role_ADMIN" name="role_ADMIN" />
-                                <label htmlFor="role_ADMIN" className="text-sm font-medium leading-none cursor-pointer">Admin</label>
-                            </div>
+                        <div className="border p-4 rounded-md flex flex-col gap-4">
+                            <FieldLabel>
+                                <Field orientation="horizontal">
+                                    <Checkbox id="AUTHOR" name="AUTHOR" defaultChecked />
+                                    <FieldContent>
+                                        <FieldTitle>Author</FieldTitle>
+                                        <FieldDescription>
+                                            Can create and manage their own tickets.
+                                        </FieldDescription>
+                                    </FieldContent>
+                                </Field>
+                            </FieldLabel>
+                            <FieldLabel>
+                                <Field orientation="horizontal">
+                                    <Checkbox id="SUPPORT" name="SUPPORT" />
+                                    <FieldContent>
+                                        <FieldTitle>Support</FieldTitle>
+                                        <FieldDescription>
+                                            Can manage and respond to tickets.
+                                        </FieldDescription>
+                                    </FieldContent>
+                                </Field>
+                            </FieldLabel>
+                            <FieldLabel>
+                                <Field orientation="horizontal">
+                                    <Checkbox id="ADMIN" name="ADMIN" />
+                                    <FieldContent>
+                                        <FieldTitle>Admin</FieldTitle>
+                                        <FieldDescription>
+                                            Can manage users, tickets, comments, assignments.
+                                        </FieldDescription>
+                                    </FieldContent>
+                                </Field>
+                            </FieldLabel>
                         </div>
                     </div>
+
                 </div>
 
                 <div className="flex justify-end gap-2">

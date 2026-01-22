@@ -8,7 +8,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { ErrorAlert } from "@/components/error-alert";
 import { SuccessAlert } from "@/components/sucess-alert";
 import { Button } from "@/components/ui/button";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
@@ -99,7 +99,7 @@ export default function AdminUserDetailsPage() {
     };
 
     return (
-        <div className="container mx-auto py-6 space-y-8 max-w-4xl">
+        <div className="container mx-auto py-6 space-y-8 max-w-4xl px-4">
             <div className="space-y-2">
                 <Breadcrumb>
                     <BreadcrumbList>
@@ -122,30 +122,6 @@ export default function AdminUserDetailsPage() {
 
             {/* User Statistics */}
             <UserStats userId={userId} />
-            {/* {stats && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <StatisticsCard
-                        icon={<Briefcase />}
-                        title="Assigned Tickets"
-                        value={stats.assignedTickets.toString()}
-                    />
-                    <StatisticsCard
-                        icon={<CheckCircle2 />}
-                        title="Resolved Tickets"
-                        value={stats.resolvedAssignedTickets.toString()}
-                    />
-                    <StatisticsCard
-                        icon={<PlusCircle />}
-                        title="Created Tickets"
-                        value={stats.createdTickets.toString()}
-                    />
-                    <StatisticsCard
-                        icon={<MessageSquare />}
-                        title="Total Comments"
-                        value={stats.totalComments.toString()}
-                    />
-                </div>
-            )} */}
 
             <Separator />
 
@@ -173,19 +149,40 @@ export default function AdminUserDetailsPage() {
                         </div>
                         <div className="space-y-4">
                             <h3 className="text-lg font-medium">Roles</h3>
-                            <div className="space-y-2 border p-4 rounded-md">
-                                <div className="flex items-center gap-2">
-                                    <Checkbox id="AUTHOR" name="AUTHOR" defaultChecked={user.roles.includes(Role.AUTHOR)} />
-                                    <label htmlFor="AUTHOR" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Author</label>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Checkbox id="SUPPORT" name="SUPPORT" defaultChecked={user.roles.includes(Role.SUPPORT)} />
-                                    <label htmlFor="SUPPORT" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Support</label>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Checkbox id="ADMIN" name="ADMIN" defaultChecked={user.roles.includes(Role.ADMIN)} />
-                                    <label htmlFor="ADMIN" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Admin</label>
-                                </div>
+                            <div className="border p-4 rounded-md flex flex-col gap-4">
+                                <FieldLabel>
+                                    <Field orientation="horizontal">
+                                        <Checkbox id="AUTHOR" name="AUTHOR" defaultChecked={user.roles.includes(Role.AUTHOR)} />
+                                        <FieldContent>
+                                            <FieldTitle>Author</FieldTitle>
+                                            <FieldDescription>
+                                                Can create and manage their own tickets.
+                                            </FieldDescription>
+                                        </FieldContent>
+                                    </Field>
+                                </FieldLabel>
+                                <FieldLabel>
+                                    <Field orientation="horizontal">
+                                        <Checkbox id="SUPPORT" name="SUPPORT" defaultChecked={user.roles.includes(Role.SUPPORT)} />
+                                        <FieldContent>
+                                            <FieldTitle>Support</FieldTitle>
+                                            <FieldDescription>
+                                                Can manage and respond to tickets.
+                                            </FieldDescription>
+                                        </FieldContent>
+                                    </Field>
+                                </FieldLabel>
+                                <FieldLabel>
+                                    <Field orientation="horizontal">
+                                        <Checkbox id="ADMIN" name="ADMIN" defaultChecked={user.roles.includes(Role.ADMIN)} />
+                                        <FieldContent>
+                                            <FieldTitle>Admin</FieldTitle>
+                                            <FieldDescription>
+                                                Can manage users, tickets, comments, assignments.
+                                            </FieldDescription>
+                                        </FieldContent>
+                                    </Field>
+                                </FieldLabel>
                             </div>
                             <p className="text-xs text-muted-foreground">
                                 <strong>Note:</strong> Removing the ADMIN role from yourself may block access to this page.
