@@ -20,6 +20,7 @@ public class CorsConfig {
                 // Allowed origins
                 configuration.setAllowedOrigins(Arrays.asList(
                                 frontendUrl,
+                                "http://192.168.76.124:5173",
                                 "http://localhost:5173",
                                 "http://localhost:3000"));
                 // Allowed HTTP methods

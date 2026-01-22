@@ -10,12 +10,16 @@ import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.user.CreateUs
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.user.UpdatePasswordRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.user.UpdateUserRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.UserResponseDTO;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.UserStatsResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketStatus;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.User;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.exception.DuplicateResourceException;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.exception.ForbiddenException;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.exception.ResourceNotFoundException;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.mapper.UserMapper;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.TicketCommentRepository;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.TicketRepository;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.UserRepository;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.security.UserPrincipal;
 
@@ -26,6 +30,12 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @Autowired
+    private TicketCommentRepository ticketCommentRepository;
 
     public List<UserResponseDTO> getAll() {
         return UserMapper.toResponseList(userRepository.findAll());
@@ -117,5 +127,14 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
+    }
+
+    public UserStatsResponseDTO getUserStats(Long userId) {
+        long assigned = ticketRepository.countByAssignedTo_Id(userId);
+        long resolved = ticketRepository.countByAssignedTo_IdAndStatus(userId, TicketStatus.RESOLVED);
+        long created = ticketRepository.countByAuthor_Id(userId);
+        long comments = ticketCommentRepository.countByAuthor_Id(userId);
+
+        return new UserStatsResponseDTO(assigned, resolved, created, comments);
     }
 }

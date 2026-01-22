@@ -140,6 +140,7 @@
 								<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority</class>
 								<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketStatus</class>
 								<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role</class>
+								<class>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketCommentType</class>
 							</classes>
 							<outputFile>${project.basedir}/../../shared/enums/index.ts</outputFile>
 						</configuration>
@@ -159,11 +160,13 @@
 								<customTypeMapping>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketPriority:TicketPriority</customTypeMapping>
 								<customTypeMapping>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketStatus:TicketStatus</customTypeMapping>
 								<customTypeMapping>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role:Role</customTypeMapping>
+								<customTypeMapping>lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketCommentType:TicketCommentType</customTypeMapping>
 							</customTypeMappings>
 							<importDeclarations>
 								<importDeclaration>import { TicketPriority } from '../enums'</importDeclaration>
 								<importDeclaration>import { TicketStatus } from '../enums'</importDeclaration>
 								<importDeclaration>import { Role } from '../enums'</importDeclaration>
+								<importDeclaration>import { TicketCommentType } from '../enums'</importDeclaration>
 							</importDeclarations>
 						</configuration>
 					</execution>

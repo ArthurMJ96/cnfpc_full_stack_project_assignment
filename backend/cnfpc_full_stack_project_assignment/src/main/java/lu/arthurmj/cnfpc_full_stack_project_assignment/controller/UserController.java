@@ -112,4 +112,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{id}/stats")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Get user statistics", description = "Get statistics for a specific user. Access restricted to ADMIN.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User statistics found"),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+    })
+    public ResponseEntity<lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.UserStatsResponseDTO> getUserStats(
+            @PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserStats(id));
+    }
+
 }

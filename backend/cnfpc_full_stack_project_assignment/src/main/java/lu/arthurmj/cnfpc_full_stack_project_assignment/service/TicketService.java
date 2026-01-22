@@ -10,11 +10,14 @@ import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.ticket.Update
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.TicketResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Role;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.Ticket;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketComment;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketCommentType;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketStatus;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.User;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.exception.ForbiddenException;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.exception.ResourceNotFoundException;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.mapper.TicketMapper;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.TicketCommentRepository;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.TicketRepository;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.repository.UserRepository;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.security.UserPrincipal;
@@ -30,6 +33,9 @@ public class TicketService {
 
     @Autowired
     private GeminiService geminiService;
+
+    @Autowired
+    private TicketCommentRepository ticketCommentRepository;
 
     public List<TicketResponseDTO> getAll() {
         return TicketMapper.toResponseList(ticketRepository.findAll());
@@ -96,6 +102,8 @@ public class TicketService {
             if (!UserPrincipal.isAdmin() && !UserPrincipal.isSupport()) {
                 throw new ForbiddenException(UserPrincipal.getCurrentUserId(), "update ticket status");
             }
+            createSystemComment(ticket, UserPrincipal.getCurrentUserId(),
+                    String.format("updated the Status from **%s** to **%s**", ticket.getStatus(), dto.getStatus()));
             ticket.setStatus(dto.getStatus());
         }
 
@@ -104,6 +112,9 @@ public class TicketService {
             if (!UserPrincipal.isAdmin()) {
                 throw new ForbiddenException(UserPrincipal.getCurrentUserId(), "update ticket priority");
             }
+            createSystemComment(ticket, UserPrincipal.getCurrentUserId(),
+                    String.format("updated the Priority from **%s** to **%s**", ticket.getPriority(),
+                            dto.getPriority()));
             ticket.setPriority(dto.getPriority());
         }
 
@@ -112,7 +123,9 @@ public class TicketService {
         if (dto.getDueAt() != null) {
             ticket.setDueAt(dto.getDueAt());
         }
-        return TicketMapper.toResponse(ticketRepository.save(ticket));
+
+        boolean isAdmin = UserPrincipal.isAdmin();
+        return TicketMapper.toResponseWithComments(ticketRepository.save(ticket), isAdmin);
     }
 
     public TicketResponseDTO assignTicketToSupport(Long ticketId, Long supportId) {
@@ -133,7 +146,11 @@ public class TicketService {
         }
 
         ticket.getAssignedTo().add(support);
-        return TicketMapper.toResponse(ticketRepository.save(ticket));
+        createSystemComment(ticket, UserPrincipal.getCurrentUserId(),
+                String.format("assigned **%s**", support.getFirstname() + " " + support.getLastname()));
+
+        boolean isAdmin = UserPrincipal.isAdmin();
+        return TicketMapper.toResponseWithComments(ticketRepository.save(ticket), isAdmin);
     }
 
     public TicketResponseDTO unassignTicketFromSupport(Long ticketId, Long supportId) {
@@ -149,6 +166,20 @@ public class TicketService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", supportId));
 
         ticket.getAssignedTo().remove(support);
-        return TicketMapper.toResponse(ticketRepository.save(ticket));
+        createSystemComment(ticket, UserPrincipal.getCurrentUserId(),
+                String.format("unassigned **%s**", support.getFirstname() + " " + support.getLastname()));
+
+        boolean isAdmin = UserPrincipal.isAdmin();
+        return TicketMapper.toResponseWithComments(ticketRepository.save(ticket), isAdmin);
+    }
+
+    private void createSystemComment(Ticket ticket, Long authorId, String content) {
+        User author = userRepository.findById(authorId).orElseThrow();
+        TicketComment comment = new TicketComment();
+        comment.setTicket(ticket);
+        comment.setAuthor(author);
+        comment.setContent(content);
+        comment.setType(TicketCommentType.UPDATE);
+        ticketCommentRepository.save(comment);
     }
 }

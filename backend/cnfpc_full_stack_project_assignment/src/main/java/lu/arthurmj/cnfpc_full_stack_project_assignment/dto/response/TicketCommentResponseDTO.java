@@ -2,6 +2,8 @@ package lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response;
 
 import java.time.LocalDateTime;
 
+import lu.arthurmj.cnfpc_full_stack_project_assignment.entity.TicketCommentType;
+
 public class TicketCommentResponseDTO {
 
     private Long id;
@@ -12,9 +14,10 @@ public class TicketCommentResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private UserResponseDTO author;
+    private TicketCommentType type;
 
     public TicketCommentResponseDTO(Long id, Long ticketId, boolean edited, boolean deleted, String content,
-            LocalDateTime createdAt, LocalDateTime updatedAt, UserResponseDTO author) {
+            LocalDateTime createdAt, LocalDateTime updatedAt, UserResponseDTO author, TicketCommentType type) {
         this.id = id;
         this.ticketId = ticketId;
         this.edited = edited;
@@ -23,6 +26,7 @@ public class TicketCommentResponseDTO {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.author = author;
+        this.type = type;
     }
 
     public TicketCommentResponseDTO() {
@@ -90,6 +94,14 @@ public class TicketCommentResponseDTO {
 
     public void setAuthor(UserResponseDTO author) {
         this.author = author;
+    }
+
+    public TicketCommentType getType() {
+        return type;
+    }
+
+    public void setType(TicketCommentType type) {
+        this.type = type;
     }
 
 }
