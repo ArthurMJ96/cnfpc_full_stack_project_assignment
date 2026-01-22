@@ -1,16 +1,14 @@
 [phases.setup]
-# Force the correct Node version
 nixPkgs = ["nodejs_22"]
 
 [phases.install]
-# Reach outside the /frontend folder to include the /shared folder
-# This makes it available at the same relative path during build
+# All paths are now relative to the root /
 onlyIncludeFiles = [
-  "package.json",
-  "package-lock.json",
-  "../shared/"
+  "frontend/package.json",
+  "frontend/package-lock.json",
+  "shared/"
 ]
-cmds = ["npm ci"]
+cmds = ["cd frontend && npm ci"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["cd frontend && npm run build"]
