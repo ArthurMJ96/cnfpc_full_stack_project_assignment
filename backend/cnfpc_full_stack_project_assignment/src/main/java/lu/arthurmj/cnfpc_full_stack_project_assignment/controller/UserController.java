@@ -25,6 +25,7 @@ import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.user.CreateUs
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.user.UpdatePasswordRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.request.user.UpdateUserRequestDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.UserResponseDTO;
+import lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.UserStatsResponseDTO;
 import lu.arthurmj.cnfpc_full_stack_project_assignment.service.UserService;
 
 @RestController
@@ -113,13 +114,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}/stats")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Get user statistics", description = "Get statistics for a specific user. Access restricted to ADMIN.")
+    @PreAuthorize("hasAnyRole('SUPPORT', 'ADMIN')")
+    @Operation(summary = "Get user statistics", description = "Get statistics for a specific user. Access restricted to ADMIN and SUPPORT roles.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User statistics found"),
+            @ApiResponse(responseCode = "200", description = "User statistics found", content = @Content(schema = @Schema(implementation = UserStatsResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
-    public ResponseEntity<lu.arthurmj.cnfpc_full_stack_project_assignment.dto.response.UserStatsResponseDTO> getUserStats(
+    public ResponseEntity<UserStatsResponseDTO> getUserStats(
             @PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserStats(id));
     }

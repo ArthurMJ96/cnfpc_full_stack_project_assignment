@@ -12,7 +12,6 @@ import { Spinner } from '@/components/ui/spinner';
 import type { CreateTicketRequestDTO } from '@shared/dtos';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
     const { user } = useAuth();
@@ -20,8 +19,6 @@ export default function Home() {
     const [description, setDescription] = useState("");
     const [withDueDate, setWithDueDate] = useState(false);
     const [dueAt, setDueAt] = useState("");
-
-    const navigate = useNavigate();
 
     const { tickets, loading: loadingTickets, refreshTickets } = useTickets();
 
@@ -109,7 +106,7 @@ export default function Home() {
                         <Spinner className="h-8 w-8" />
                     </div>
                 ) : myTickets.length > 0 ? (
-                    myTickets.map((ticket) => (
+                    myTickets.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map((ticket) => (
                         <Ticket key={ticket.id} ticket={ticket} />
                     ))
                 ) : (

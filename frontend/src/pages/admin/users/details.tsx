@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { userApi } from "@/features/user/api";
-import type { UserResponseDTO, UserStatsResponseDTO, UpdateUserRequestDTO } from "@shared/dtos";
+import type { UserResponseDTO, UpdateUserRequestDTO } from "@shared/dtos";
 import { Role } from "@shared/enums";
 import { useNavigate, useParams } from "react-router-dom";
 import { Spinner } from "@/components/ui/spinner";
@@ -12,8 +12,6 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { StatisticsCard } from "@/components/statistics-card";
-import { Briefcase, CheckCircle2, MessageSquare, PlusCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
     Breadcrumb,
@@ -23,6 +21,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import UserStats from "@/features/user/components/user-stats";
 
 export default function AdminUserDetailsPage() {
     const { id } = useParams<{ id: string }>();
@@ -31,7 +30,6 @@ export default function AdminUserDetailsPage() {
     const navigate = useNavigate();
 
     const [user, setUser] = useState<UserResponseDTO>();
-    const [stats, setStats] = useState<UserStatsResponseDTO>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | undefined | unknown>();
     const [profileSuccess, setProfileSuccess] = useState<string>();
@@ -48,12 +46,8 @@ export default function AdminUserDetailsPage() {
 
         const fetchData = async () => {
             try {
-                const [userData, statsData] = await Promise.all([
-                    userApi.getById(userId),
-                    userApi.getUserStats(userId)
-                ]);
+                const userData = await userApi.getById(userId);
                 setUser(userData);
-                setStats(statsData);
             } catch (err: unknown) {
                 setError(err);
             } finally {
@@ -76,7 +70,7 @@ export default function AdminUserDetailsPage() {
         const formData = new FormData(form);
 
         const newRoles: Role[] = [];
-        
+
         if (formData.get("AUTHOR") === "on") newRoles.push(Role.AUTHOR);
         if (formData.get("SUPPORT") === "on") newRoles.push(Role.SUPPORT);
         if (formData.get("ADMIN") === "on") newRoles.push(Role.ADMIN);
@@ -127,7 +121,8 @@ export default function AdminUserDetailsPage() {
             </div>
 
             {/* User Statistics */}
-            {stats && (
+            <UserStats userId={userId} />
+            {/* {stats && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <StatisticsCard
                         icon={<Briefcase />}
@@ -150,7 +145,7 @@ export default function AdminUserDetailsPage() {
                         value={stats.totalComments.toString()}
                     />
                 </div>
-            )}
+            )} */}
 
             <Separator />
 

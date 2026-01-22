@@ -15,7 +15,7 @@ export function AuthLayout() {
                     </Link>
 
                     <div className="ml-auto">
-                        <ThemeToggle className="size-12" />
+                        <ThemeToggle className="size-12" asIcon />
                     </div>
                 </div>
                 <Outlet />
