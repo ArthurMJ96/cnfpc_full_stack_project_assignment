@@ -2,13 +2,13 @@
 nixPkgs = ["nodejs_22"]
 
 [phases.install]
-# All paths are now relative to the root /
+# Since Build Context is /, these paths are relative to the root
 onlyIncludeFiles = [
   "frontend/package.json",
   "frontend/package-lock.json",
   "shared/"
 ]
-cmds = ["cd frontend && npm ci"]
+cmds = ["npm ci"]
 
 [phases.build]
-cmds = ["cd frontend && npm run build"]
+cmds = ["npm run build"]
