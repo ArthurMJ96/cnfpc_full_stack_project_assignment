@@ -186,3 +186,15 @@ To use this feature, you must provide your own API key and enable the service.
     gemini.api.key=YOUR_ACTUAL_API_KEY_HERE
     ```
     *Environment Variables:* `GEMINI_ENABLED=true` and `GEMINI_API_KEY=...`
+
+--- 
+
+---
+ 
+--- 
+
+### Screenshots for the lazy
+
+![App Screenshot - Login Page](./presentation/login_page.png)
+![App Screenshot - Ticket Detail with Comments](./presentation/ticket_detail_with_comments.png)
+![App Screenshot - Support Dashboard](./presentation/support_dashboard.png)
